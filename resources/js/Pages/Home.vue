@@ -16,19 +16,18 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- <pre>
-                    {{ tarefa }}
-                </pre> -->
                 <tr v-for="tarefa in props.tarefas" :key="tarefa.id">
-                <td class="td">{{ tarefa.titulo }}</td>
-                <td class="td">{{ tarefa.status }}</td>
-                <td class="td">
-                    <button><i class="bi bi-pencil-square"></i></button>
-                    <button><i class="bi bi-trash"></i></button>
-                </td>
+                    <td class="td">{{ tarefa.titulo }}</td>
+                    <td class="td">{{ tarefa.status }}</td>
+                    <td class="td">
+                        <button><i class="bi bi-pencil-square"></i></button>
+                        <button @click="deletar(tarefa.id)">
+                        <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
                 </tr>
                 <tr v-if="props.tarefas.length === 0">
-                <td colspan="3" style="text-align: center;">Nenhuma tarefa encontrada.</td>
+                    <td colspan="3" style="text-align: center;">Nenhuma tarefa encontrada.</td>
                 </tr>
             </tbody>
             </table>
@@ -37,10 +36,18 @@
 </template>
 
 <script setup>
+import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
   tarefas: Array
 })
+
+function deletar(id) {
+  if (confirm('Tem certeza que deseja deletar?')) {
+    router.delete(`/tarefa/${id}`)
+    }
+}
+
 </script>
 
 <style scoped>

@@ -29,6 +29,7 @@ class TarefaController extends Controller
     {
         return Inertia::render('CreatTarefa');
     }
+
     public function store(TarefaRequest $request)
     {
         $tarefa = $request->validated();
@@ -59,9 +60,9 @@ class TarefaController extends Controller
     {
         $tarefa = $this->model->findOrFail($id);
 
-        $tarefa->destroy();
+        $tarefa->delete();
 
-        // redireciona
+        return redirect()->route('tarefa.index');
     }
 
 }

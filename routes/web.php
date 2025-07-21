@@ -8,10 +8,13 @@ use Inertia\Inertia;
 //     return Inertia::render('Home');
 // });
 
-// Route::resource('/tarefa', TarefaController::class);
+Route::resource('/tarefa', TarefaController::class);
 
 Route::get('/tarefa', [TarefaController::class, 'index'])->name('tarefa.index');
 Route::post('/tarefa', [TarefaController::class, 'store']);
+Route::delete('/tarefa/{id}', [TarefaController::class, 'destroy'])->name('tarefa.destroy');
+
+
 
 Route::get('/tarefa/create', function () {
     return Inertia::render('CreatTarefa');
