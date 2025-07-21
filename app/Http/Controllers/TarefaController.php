@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TarefaRequest;
+use Inertia\Inertia;
 use App\Models\Tarefa;
 use Illuminate\Http\Request;
+use App\Http\Requests\TarefaRequest;
 
 class TarefaController extends Controller
 {
@@ -19,20 +20,22 @@ class TarefaController extends Controller
     {
         $tarefas = $this->model->all();
 
-        dd($tarefas);
+        return Inertia::render('Home', [
+            'tarefas' => $tarefas
+        ]);
     }
 
-    public function store()
+    public function create()
     {
-        dd('direcionar');
+        return Inertia::render('CreatTarefa');
     }
-    public function create(TarefaRequest $request)
+    public function store(TarefaRequest $request)
     {
         $tarefa = $request->validated();
-
+     
         $this->model->create($tarefa);
 
-        dd('criou');
+        return redirect()->route('tarefa.index');
     }
 
     public function edit($id)
