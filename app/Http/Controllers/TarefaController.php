@@ -27,7 +27,7 @@ class TarefaController extends Controller
 
     public function create()
     {
-        return Inertia::render('CreatTarefa');
+        return Inertia::render('FormTarefa');
     }
 
     public function store(TarefaRequest $request)
@@ -43,7 +43,9 @@ class TarefaController extends Controller
     {
         $tarefa = $this->model->findOrFail($id);
 
-        dd('redirecionar');
+        return Inertia::render('FormTarefa', [
+            'tarefa' => $tarefa
+        ]);
     }
     public function update($id, TarefaRequest $request)
     {
@@ -53,7 +55,7 @@ class TarefaController extends Controller
 
         $tarefa->update($dados);
     
-        // Redireciona
+        return redirect()->route('tarefa.index');
     }
 
     public function destroy($id)

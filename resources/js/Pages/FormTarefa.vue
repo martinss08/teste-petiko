@@ -56,14 +56,25 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3'
 
+const props = defineProps({
+  tarefa: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
 const form = useForm({
-  titulo: '',
-  descricao: '',
-  status: '',
+  titulo: props.tarefa?.titulo || '',
+  descricao: props.tarefa?.descricao || '',
+  status: props.tarefa?.status || '',
 })
 
 const submit = () => {
-  form.post('/tarefa')
+  if (props.tarefa?.id) {
+    form.put(`/tarefa/${props.tarefa.id}`) // editar
+  } else {
+    form.post('/tarefa') // criar
+  }
 }
 
 </script>

@@ -20,10 +20,17 @@
                     <td class="td">{{ tarefa.titulo }}</td>
                     <td class="td">{{ tarefa.status }}</td>
                     <td class="td">
-                        <button><i class="bi bi-pencil-square"></i></button>
-                        <button @click="deletar(tarefa.id)">
-                        <i class="bi bi-trash"></i>
-                        </button>
+                        <div class="d-flex justify-content-center align-items-center gap-3">
+                            <button class="btn btn-link p-0 text-primary fs-5" 
+                            @click="editar(tarefa.id)">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+
+                            <button class="btn btn-link p-0 text-danger fs-5" 
+                            @click="deletar(tarefa.id)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 <tr v-if="props.tarefas.length === 0">
@@ -41,6 +48,10 @@ import { router } from '@inertiajs/vue3'
 const props = defineProps({
   tarefas: Array
 })
+
+const editar = (id) => {
+  router.get(`/tarefa/${id}/edit`)
+}
 
 function deletar(id) {
   if (confirm('Tem certeza que deseja deletar?')) {
