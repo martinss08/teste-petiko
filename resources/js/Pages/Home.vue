@@ -8,6 +8,7 @@
       <table class="table table-bordered table-hover text-center align-middle">
         <thead class="table-light">
           <tr>
+            <th scope="col">ID</th>
             <th scope="col">Tarefa</th>
             <th scope="col">Status</th>
             <th scope="col">Opções</th>
@@ -15,7 +16,8 @@
         </thead>
 
         <tbody>
-          <tr v-for="tarefa in tarefas" :key="tarefa.id">
+          <tr v-for="tarefa in tarefas.data" :key="tarefa.id">
+            <td>{{ tarefa.id }}</td>
             <td>{{ tarefa.titulo }}</td>
             <td>{{ tarefa.status?.nome }}</td>
             <td>
@@ -30,11 +32,29 @@
             </td>
           </tr>
 
-          <tr v-if="tarefas.length === 0">
+          <tr v-if="tarefas.data.length === 0">
             <td colspan="3" class="text-center text-muted">Nenhuma tarefa encontrada.</td>
           </tr>
         </tbody>
       </table>
+      
+      <div class="container_btn" style="display: flex; justify-content: center;">
+        <button
+          :disabled="!tarefas.prev_page_url"
+          @click="mudarPagina(tarefas.prev_page_url)"
+          class="px-3 py-1 border rounded"
+        >
+          Anterior
+        </button>
+
+        <button
+          :disabled="!tarefas.next_page_url"
+          @click="mudarPagina(tarefas.next_page_url)"
+          class="px-3 py-1 border rounded"
+        >
+          Próximo
+        </button>
+      </div>
     </div>
   </section>
 </template>
@@ -44,7 +64,7 @@ import Header from '@/Components/Header.vue'
 import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
-  tarefas: Array
+  tarefas: Object
 })
 
 const editar = (id) => {
@@ -54,9 +74,14 @@ const editar = (id) => {
 function deletar(id) {
   if (confirm('Tem certeza que deseja deletar?')) {
     router.delete(`/tarefa/${id}`)
-    }
+  }
 }
 
+function mudarPagina(url) {
+  if (url) {
+    router.get(url)
+  }
+}
 </script>
 
 <style scoped>

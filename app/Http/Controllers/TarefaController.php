@@ -19,7 +19,7 @@ class TarefaController extends Controller
 
     public function index()
     {
-        $tarefas = $this->model->with('status')->get();
+        $tarefas = $this->model->with('status')->paginate(10);
 
         return Inertia::render('Home', [
             'tarefas' => $tarefas
