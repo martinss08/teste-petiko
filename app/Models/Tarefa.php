@@ -12,7 +12,8 @@ class Tarefa extends Model
     protected $fillable = [
         'titulo',
         'descricao',
-        'status_id'
+        'status_id',
+        'data_tarefa'
     ];
 
     public function status()

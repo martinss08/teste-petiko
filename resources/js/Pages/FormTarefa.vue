@@ -6,7 +6,7 @@
 
          <div class="container_livro">
 
-            <form @submit.prevent="submit">
+          <form @submit.prevent="submit">
             <div class="box">
                 <label for="titulo">Título</label>
                 <input v-model="form.titulo" type="text" id="titulo"
@@ -30,10 +30,25 @@
                 {{ form.errors.descricao }}
             </div>
 
+            <div class="box">
+              <label for="data_tarefa">Data para fazer</label>
+              <input
+                v-model="form.data_tarefa"
+                type="date"
+                class="form-control"
+                :class="{ 'is-invalid': form.errors.data_tarefa }"
+              />
+            </div>
+            <div class="invalid-feedback" v-if="form.errors.data_tarefa">
+              {{ form.errors.data_tarefa }}
+            </div>
+
             <!-- <pre>{{ statusOptions }}</pre> -->
-            <div class="box status">
+            <div class="box status" v-if="props.tarefa?.id">
               <label for="status">Status</label>
-              <select v-model="form.status_id" id="status"
+              <select
+                v-model="form.status_id"
+                id="status"
                 class="form-control"
                 :class="{ 'is-invalid': form.errors.status_id }"
               >
@@ -47,8 +62,8 @@
                 </option>
               </select>
             </div>
-            <div class="invalid-feedback" v-if="form.errors.status_id">
-                {{ form.errors.status_id }}
+            <div class="invalid-feedback" v-if="props.tarefa?.id && form.errors.status_id">
+              {{ form.errors.status_id }}
             </div>
             
             <div style="margin: 2rem auto 0 auto;">
@@ -56,7 +71,7 @@
                 Salvar Tarefa
               </button>
             </div>
-            </form>
+          </form>
             
         </div>
     </div>
@@ -81,7 +96,8 @@ const props = defineProps({
 const form = useForm({
   titulo: props.tarefa?.titulo || '',
   descricao: props.tarefa?.descricao || '',
-  status_id: props.tarefa?.status?.id || '',
+   status_id: props.tarefa?.status?.id || 1,
+  data_tarefa: props.tarefa?.data_tarefa || '',
 })
 
 const submit = () => {

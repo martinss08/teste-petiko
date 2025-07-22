@@ -15,7 +15,6 @@ class StatusSeeder extends Seeder
     {
         DB::table('status')->insert([
             ['nome' => 'Pendente'],
-            ['nome' => 'Em andamento'],
             ['nome' => 'Concluída'],
         ]);
     }

@@ -22,9 +22,10 @@ class TarefaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'titulo' => 'required|min:3|max:255',
-            'descricao' => 'nullable|max:230',
-            'status_id' => 'required|exists:status,id'
+            'titulo' => ['required', 'min:3', 'max:255'],
+            'descricao' => ['nullable', 'max:230'],
+            'status_id' => ['required', 'exists:status,id'],
+            'data_tarefa' => ['required', 'date', 'after_or_equal:today'],
         ];
     }
     
@@ -39,6 +40,10 @@ class TarefaRequest extends FormRequest
 
             'status_id.required' => 'Selecione um status.',
             'status_id.exists'   => 'Status inválido selecionado.',
+
+            'data_tarefa.required' => 'A data da tarefa é obrigatória.',
+            'data_tarefa.date' => 'Informe uma data válida.',
+            'data_tarefa.after_or_equal' => 'A data deve ser hoje ou futura.'
         ];
     }
 }

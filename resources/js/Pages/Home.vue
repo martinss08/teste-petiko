@@ -17,21 +17,24 @@
     <h2 class="text-center mb-4">Lista de Tarefas</h2>
 
     <div class="table-responsive">
+      <!-- <pre>{{ tarefas }}</pre> -->
       <table class="table table-bordered table-hover text-center align-middle">
         <thead class="table-light">
           <tr>
             <th scope="col">ID</th>
             <th scope="col">Tarefa</th>
             <th scope="col">Status</th>
+            <th scope="col">Prazo</th>
             <th scope="col">Opções</th>
           </tr>
         </thead>
-
+        
         <tbody>
           <tr v-for="tarefa in tarefas.data" :key="tarefa.id">
             <td>{{ tarefa.id }}</td>
             <td>{{ tarefa.titulo }}</td>
             <td>{{ tarefa.status?.nome }}</td>
+            <td>{{ formatarData(tarefa.data_tarefa) }}</td>
             <td>
               <div class="d-flex justify-content-center align-items-center gap-3">
                 <button class="btn btn-link p-0 text-primary fs-5" @click="editar(tarefa.id)">
@@ -99,6 +102,12 @@ watch(busca, (valor) => {
     })
   }
 })
+
+const formatarData = (dataISO) => {
+  if (!dataISO) return '';
+  const [ano, mes, dia] = dataISO.split('-');
+  return `${dia}/${mes}/${ano}`;
+}
 
 const editar = (id) => {
   router.get(`/tarefa/${id}/edit`)
