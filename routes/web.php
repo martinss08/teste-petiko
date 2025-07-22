@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TarefaController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -11,6 +12,8 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return Inertia::render('Login');
 });
+
+Route::post('/user', [UserController::class, 'create']);
 
 Route::get('/tarefa', [TarefaController::class, 'index'])->name('tarefa.index');
 Route::get('/tarefa/create', [TarefaController::class, 'create'])->name('tarefa.create');

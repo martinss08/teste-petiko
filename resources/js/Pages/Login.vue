@@ -130,13 +130,16 @@ const submit = () => {
         border: none;
         border-bottom: 1px solid black ;
     }
-    /* input.is-invalid {
-      border-bottom: 1px solid #dc3545 !important;
+     input.is-invalid {
+        border-bottom: 1px solid #dc3545 !important;
     }
     .invalid-feedback {
-      color: #dc3545;
-      font-size: .6rem;
-    } */
+        text-align: center;
+        display: block !important;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #dc3545;
+        font-size: .6rem;
+    }
 
 
     .logs {
