@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Models\Tarefa;
 use Illuminate\Http\Request;
 use App\Http\Requests\TarefaRequest;
+use App\Models\Status;
 
 class TarefaController extends Controller
 {
@@ -18,7 +19,7 @@ class TarefaController extends Controller
 
     public function index()
     {
-        $tarefas = $this->model->all();
+        $tarefas = $this->model->with('status')->get();
 
         return Inertia::render('Home', [
             'tarefas' => $tarefas
@@ -27,7 +28,14 @@ class TarefaController extends Controller
 
     public function create()
     {
-        return Inertia::render('FormTarefa');
+        $status = Status::select('id', 'nome')->get();
+
+        // dd($status);
+
+        return Inertia::render('FormTarefa', [
+            'statusOptions' => $status
+        ]);
+        // return Inertia::render('FormTarefa');
     }
 
     public function store(TarefaRequest $request)
@@ -43,8 +51,11 @@ class TarefaController extends Controller
     {
         $tarefa = $this->model->findOrFail($id);
 
+        $status = Status::select('id', 'nome')->get();
+
         return Inertia::render('FormTarefa', [
-            'tarefa' => $tarefa
+            'tarefa' => $tarefa,
+            'statusOptions' => $status
         ]);
     }
     public function update($id, TarefaRequest $request)

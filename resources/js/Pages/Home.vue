@@ -17,7 +17,7 @@
         <tbody>
           <tr v-for="tarefa in tarefas" :key="tarefa.id">
             <td>{{ tarefa.titulo }}</td>
-            <td>{{ tarefa.status }}</td>
+            <td>{{ tarefa.status?.nome }}</td>
             <td>
               <div class="d-flex justify-content-center align-items-center gap-3">
                 <button class="btn btn-link p-0 text-primary fs-5" @click="editar(tarefa.id)">

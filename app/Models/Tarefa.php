@@ -9,6 +9,11 @@ class Tarefa extends Model
     protected $fillable = [
         'titulo',
         'descricao',
-        'status'
+        'status_id'
     ];
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
 }

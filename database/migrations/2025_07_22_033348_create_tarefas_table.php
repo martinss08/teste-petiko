@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('titulo', 150);
             $table->text('descricao', 220)->nullable();
-            $table->boolean('status')->default(false);
+            $table->foreignId('status_id')->constrained('status')->onDelete('cascade');
             $table->timestamps();
         });
     }

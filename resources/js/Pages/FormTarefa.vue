@@ -30,21 +30,30 @@
                 {{ form.errors.descricao }}
             </div>
 
+            <!-- <pre>{{ statusOptions }}</pre> -->
             <div class="box status">
-                <label for="status">Status</label>
-                <input v-model="form.status" type="text"
+              <label for="status">Status</label>
+              <select v-model="form.status_id" id="status"
                 class="form-control"
-                :class="{ 'is-invalid': form.errors.status }"
-                />
-                
+                :class="{ 'is-invalid': form.errors.status_id }"
+              >
+                <option disabled value="">Selecione um status</option>
+                <option
+                  v-for="option in statusOptions"
+                  :key="option.id"
+                  :value="option.id"
+                >
+                  {{ option.nome }}
+                </option>
+              </select>
             </div>
-            <div class="invalid-feedback" v-if="form.errors.status">
-                {{ form.errors.status }}
+            <div class="invalid-feedback" v-if="form.errors.status_id">
+                {{ form.errors.status_id }}
             </div>
             
             <div style="margin: 2rem auto 0 auto;">
               <button type="submit" class="btn btn-primary" :disabled="form.processing">
-                Salvar Livro
+                Salvar Tarefa
               </button>
             </div>
             </form>
@@ -55,20 +64,24 @@
 
 <script setup>
 import Header from '@/Components/Header.vue'
-
 import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps({
   tarefa: {
     type: Object,
     default: () => ({})
+  },
+  statusOptions: {
+    type: Array,
+    default: () => []
   }
-})
+});
+
 
 const form = useForm({
   titulo: props.tarefa?.titulo || '',
   descricao: props.tarefa?.descricao || '',
-  status: props.tarefa?.status || '',
+  status_id: props.tarefa?.status?.id || '',
 })
 
 const submit = () => {
@@ -100,15 +113,15 @@ const submit = () => {
   .box {
     padding: 10px;
   }
-  input[type="text"] {
+  input[type="text"], select {
     border: none;
     border-bottom: 1px solid #a19d9d79 ;
     border-radius: 0;
     margin-left: 10px;
   }
-  input[type="text"]:focus {
+  input[type="text"]:focus, select:focus {
     outline: none;
-   box-shadow: none;
+    box-shadow: none;
     border-bottom: 1px solid black ;
   }
 
@@ -123,7 +136,7 @@ const submit = () => {
     font-size: .6rem;
   }
 
-  .box.status input[type="text"]{
+  .box.status select{
     width: 180px;
   }
 </style>
