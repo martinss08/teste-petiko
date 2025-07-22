@@ -1,6 +1,8 @@
 <template>
+    <Header />
+
     <div>
-        <h2>Criação</h2>
+        <h2>Criação tarefa</h2>
 
          <div class="container_livro">
 
@@ -15,9 +17,7 @@
             <div class="invalid-feedback" v-if="form.errors.titulo">
                 {{ form.errors.titulo ?? 'sem erro'}}
             </div>
-<!-- <p style="background: yellow; color: red;" v-if="form.errors.titulo">
-  {{ form.errors.titulo }}
-</p> -->
+
             <div class="box">
                 <label for="descricao">Descrição</label>
                 <input v-model="form.descricao" type="text" id="descricao" 
@@ -54,6 +54,8 @@
 </template>
 
 <script setup>
+import Header from '@/Components/Header.vue'
+
 import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps({
