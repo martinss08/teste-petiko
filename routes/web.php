@@ -8,7 +8,9 @@ Route::get('/', function () {
     return 'Página temporária, aguarde o login';
 });
 
-Route::resource('/tarefa', TarefaController::class);
+Route::get('/login', function () {
+    return Inertia::render('Login');
+});
 
 Route::get('/tarefa', [TarefaController::class, 'index'])->name('tarefa.index');
 Route::get('/tarefa/create', [TarefaController::class, 'create'])->name('tarefa.create');
