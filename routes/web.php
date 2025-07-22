@@ -4,20 +4,15 @@ use App\Http\Controllers\TarefaController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Route::get('/tarefa', function () {
-//     return Inertia::render('Home');
-// });
+Route::get('/', function () {
+    return 'Página temporária, aguarde o login';
+});
 
 Route::resource('/tarefa', TarefaController::class);
 
 Route::get('/tarefa', [TarefaController::class, 'index'])->name('tarefa.index');
 Route::get('/tarefa/create', [TarefaController::class, 'create'])->name('tarefa.create');
-Route::get('/tarefa/{id}/edit', [TarefaController::class, 'edit']);
-Route::post('/tarefa', [TarefaController::class, 'store']);
+Route::post('/tarefa', [TarefaController::class, 'store'])->name('tarefa.store');
+Route::get('/tarefa/{id}/edit', [TarefaController::class, 'edit'])->name('tarefa.edit');
+Route::put('/tarefa/{id}', [TarefaController::class, 'update'])->name('tarefa.update');
 Route::delete('/tarefa/{id}', [TarefaController::class, 'destroy'])->name('tarefa.destroy');
-
-
-
-// Route::get('/tarefa/create', function () {
-//     return Inertia::render('FormTarefa');
-// });
