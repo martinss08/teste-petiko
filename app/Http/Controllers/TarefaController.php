@@ -17,12 +17,25 @@ class TarefaController extends Controller
         $this->model = $model;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $tarefas = $this->model->with('status')->paginate(10);
+        $busca = $request->input('busca');
+
+        $tarefas = $this->model
+            ->with('status')
+            ->when($busca, function ($query, $busca) {
+                $query->where('titulo', 'like', "%{$busca}%")
+                    ->orWhereHas('status', function ($q) use ($busca) {
+                      $q->where('nome', 'like', "%{$busca}%");
+                  });
+            })
+            ->orderBy('id')
+            ->paginate(10)
+            ->withQueryString(); // mantém ?busca= na paginação
 
         return Inertia::render('Home', [
-            'tarefas' => $tarefas
+            'tarefas' => $tarefas,
+            'busca' => $busca
         ]);
     }
 

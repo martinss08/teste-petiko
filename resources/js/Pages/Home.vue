@@ -1,6 +1,18 @@
 <template>
   <Header />
 
+   <div class="d-flex justify-content-end mt-1">
+      <div class="me-2 p-2 border rounded-pill">
+          <form class="form" @submit.prevent="buscar">
+              <input class="ps-3 border-0" type="text" placeholder="Buscar Tarefa" 
+              v-model="busca">
+              <button class="border-0 me-2 bg-transparent" type="submit" >
+                  <i class="bi bi-search"></i>
+              </button>
+          </form>
+      </div>
+  </div>
+
   <section class="container my-5">
     <h2 class="text-center mb-4">Lista de Tarefas</h2>
 
@@ -37,7 +49,7 @@
           </tr>
         </tbody>
       </table>
-      
+
       <div class="container_btn" style="display: flex; justify-content: center;">
         <button
           :disabled="!tarefas.prev_page_url"
@@ -62,9 +74,30 @@
 <script setup>
 import Header from '@/Components/Header.vue'
 import { router } from '@inertiajs/vue3'
+import { ref, watch } from 'vue'
+
 
 const props = defineProps({
-  tarefas: Object
+  tarefas: Object,
+  busca: String // nova prop para manter o valor digitado
+})
+
+const busca = ref(props.busca || '')
+
+function buscar() {
+  router.get('/tarefa', { busca: busca.value }, {
+    preserveState: true,
+    preserveScroll: true,
+  })
+}
+
+watch(busca, (valor) => {
+  if (valor === '') {
+    router.get('/tarefa', {}, {
+      preserveState: true,
+      preserveScroll: true,
+    })
+  }
 })
 
 const editar = (id) => {
@@ -79,9 +112,13 @@ function deletar(id) {
 
 function mudarPagina(url) {
   if (url) {
-    router.get(url)
+    router.get(url, { busca: busca.value }, {
+      preserveState: true,
+      preserveScroll: true,
+    })
   }
 }
+
 </script>
 
 <style scoped>
