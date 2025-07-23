@@ -19,19 +19,20 @@ class TarefaController extends Controller
 
     public function index(Request $request)
     {
-        $busca = $request->input('busca');
+         $busca = $request->input('busca');
 
         $tarefas = $this->model
             ->with('status')
+            ->where('user_id', auth()->id())
             ->when($busca, function ($query, $busca) {
                 $query->where('titulo', 'like', "%{$busca}%")
                     ->orWhereHas('status', function ($q) use ($busca) {
-                      $q->where('nome', 'like', "%{$busca}%");
-                  });
+                        $q->where('nome', 'like', "%{$busca}%");
+                    });
             })
             ->orderBy('id')
             ->paginate(10)
-            ->withQueryString(); // mantém ?busca= na paginação
+            ->withQueryString();
 
         return Inertia::render('Home', [
             'tarefas' => $tarefas,
@@ -43,19 +44,18 @@ class TarefaController extends Controller
     {
         $status = Status::select('id', 'nome')->get();
 
-        // dd($status);
-
         return Inertia::render('FormTarefa', [
             'statusOptions' => $status
         ]);
-        // return Inertia::render('FormTarefa');
     }
 
     public function store(TarefaRequest $request)
     {
-        $tarefa = $request->validated();
+        $data = $request->validated();
+
+        $data['user_id'] = auth()->id();
      
-        $this->model->create($tarefa);
+        $this->model->create($data);
 
         return redirect()->route('tarefa.index');
     }

@@ -13,11 +13,17 @@ class Tarefa extends Model
         'titulo',
         'descricao',
         'status_id',
-        'data_tarefa'
+        'data_tarefa',
+        'user_id'
     ];
 
     public function status()
     {
         return $this->belongsTo(Status::class, 'status_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
