@@ -9,13 +9,13 @@
           <form @submit.prevent="submit">
             <div class="box">
                 <label for="titulo">Título</label>
-                <input v-model="form.titulo" type="text" id="titulo"
+                <input v-model="form.titulo" type="text"
                 class="form-control"
                 :class="{ 'is-invalid': form.errors.titulo }"
                 />
-            </div>
-            <div class="invalid-feedback" v-if="form.errors.titulo">
-                {{ form.errors.titulo ?? 'sem erro'}}
+                <div class="invalid-feedback" v-if="form.errors.titulo">
+                    {{ form.errors.titulo ?? 'sem erro'}}
+                </div>
             </div>
 
             <div class="box">
@@ -25,30 +25,25 @@
                 :class="{ 'is-invalid': form.errors.descricao }"
                 />
 
-            </div>
-            <div class="invalid-feedback" v-if="form.errors.descricao">
-                {{ form.errors.descricao }}
+                <div class="invalid-feedback" v-if="form.errors.descricao">
+                    {{ form.errors.descricao }}
+                </div>
             </div>
 
             <div class="box">
               <label for="data_tarefa">Data para fazer</label>
-              <input
-                v-model="form.data_tarefa"
-                type="date"
+              <input v-model="form.data_tarefa" type="date"
                 class="form-control"
                 :class="{ 'is-invalid': form.errors.data_tarefa }"
               />
-            </div>
-            <div class="invalid-feedback" v-if="form.errors.data_tarefa">
-              {{ form.errors.data_tarefa }}
+              <div class="invalid-feedback" v-if="form.errors.data_tarefa">
+                {{ form.errors.data_tarefa }}
+              </div>
             </div>
 
-            <!-- <pre>{{ statusOptions }}</pre> -->
             <div class="box status" v-if="props.tarefa?.id">
               <label for="status">Status</label>
-              <select
-                v-model="form.status_id"
-                id="status"
+              <select v-model="form.status_id"
                 class="form-control"
                 :class="{ 'is-invalid': form.errors.status_id }"
               >
@@ -61,9 +56,9 @@
                   {{ option.nome }}
                 </option>
               </select>
-            </div>
-            <div class="invalid-feedback" v-if="props.tarefa?.id && form.errors.status_id">
-              {{ form.errors.status_id }}
+              <div class="invalid-feedback" v-if="props.tarefa?.id && form.errors.status_id">
+                {{ form.errors.status_id }}
+              </div>
             </div>
             
             <div style="margin: 2rem auto 0 auto;">
@@ -96,15 +91,15 @@ const props = defineProps({
 const form = useForm({
   titulo: props.tarefa?.titulo || '',
   descricao: props.tarefa?.descricao || '',
-   status_id: props.tarefa?.status?.id || 1,
+  status_id: props.tarefa?.status?.id || 1,
   data_tarefa: props.tarefa?.data_tarefa || '',
 })
 
 const submit = () => {
   if (props.tarefa?.id) {
-    form.put(`/tarefa/${props.tarefa.id}`) // editar
+    form.put(`/tarefa/${props.tarefa.id}`) 
   } else {
-    form.post('/tarefa') // criar
+    form.post('/tarefa') 
   }
 }
 
@@ -129,13 +124,13 @@ const submit = () => {
   .box {
     padding: 10px;
   }
-  input[type="text"], select {
+  input[type="text"], input[type="date"], select {
     border: none;
     border-bottom: 1px solid #a19d9d79 ;
     border-radius: 0;
     margin-left: 10px;
   }
-  input[type="text"]:focus, select:focus {
+  input[type="text"]:focus, input[type="date"]:focus select:focus {
     outline: none;
     box-shadow: none;
     border-bottom: 1px solid black ;

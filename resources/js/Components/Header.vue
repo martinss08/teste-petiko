@@ -5,13 +5,21 @@
       <nav class="nav">
         <a href="/tarefa">Home</a>
         <a href="/tarefa/create">Criar tarefa</a>
-        <a href="/logout">Sair</a>
+        <a href="">Perfil</a>
+        <button @click="logout">
+          Sair
+        </button>
       </nav>
     </div>
   </header>
 </template>
 
 <script setup>
+import { router } from '@inertiajs/vue3'
+
+function logout() {
+  router.post('/logout')
+}
 </script>
 
 <style scoped>
@@ -34,14 +42,14 @@
   font-weight: bold;
 }
 
-.nav a {
+.nav a, button {
   margin-left: 1rem;
   text-decoration: none;
   color: white;
   transition: text-decoration 0.2s;
 }
 
-.nav a:hover {
+.nav a:hover, button:hover {
   text-decoration: underline;
 }
 </style>

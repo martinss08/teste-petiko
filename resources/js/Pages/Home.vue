@@ -1,23 +1,26 @@
 <template>
   <Header />
 
-   <div class="d-flex justify-content-end mt-1">
-      <div class="me-2 p-2 border rounded-pill">
-          <form class="form" @submit.prevent="buscar">
-              <input class="ps-3 border-0" type="text" placeholder="Buscar Tarefa" 
-              v-model="busca">
-              <button class="border-0 me-2 bg-transparent" type="submit" >
-                  <i class="bi bi-search"></i>
-              </button>
-          </form>
-      </div>
-  </div>
-
+  <div class="d-flex justify-content-end mt-2">
+     <div class="d-flex me-2" >
+         <form @submit.prevent="buscar" 
+          class="d-flex p-1 border rounded-pill" style="border-color: #a19d9d79;">
+            <input type="text" v-model="busca" style="outline: none; box-shadow: none; border: none;"
+            placeholder="Buscar Tarefa"
+            >
+            <button class="border-0 bg-transparent" type="submit" >
+                <i class="bi bi-search"></i>
+            </button>
+         </form>
+     </div>
+ </div>
+  
   <section class="container my-5">
-    <h2 class="text-center mb-4">Lista de Tarefas</h2>
+    <h1 class="text-center mb-4 fs-1">
+      Lista de Tarefas
+    </h1>
 
     <div class="table-responsive">
-      <!-- <pre>{{ tarefas }}</pre> -->
       <table class="table table-bordered table-hover text-center align-middle">
         <thead class="table-light">
           <tr>
@@ -53,19 +56,17 @@
         </tbody>
       </table>
 
-      <div class="container_btn" style="display: flex; justify-content: center;">
-        <button
-          :disabled="!tarefas.prev_page_url"
+      <div class="d-flex justify-content-evenly mx-auto mt-4" style="width: 250px;">
+        <button class="px-3 py-1 border rounded" 
           @click="mudarPagina(tarefas.prev_page_url)"
-          class="px-3 py-1 border rounded"
+          :disabled="!tarefas.prev_page_url"
         >
           Anterior
         </button>
 
-        <button
-          :disabled="!tarefas.next_page_url"
+        <button class="px-3 py-1 border rounded"
           @click="mudarPagina(tarefas.next_page_url)"
-          class="px-3 py-1 border rounded"
+          :disabled="!tarefas.next_page_url"
         >
           Próximo
         </button>
@@ -82,7 +83,7 @@ import { ref, watch } from 'vue'
 
 const props = defineProps({
   tarefas: Object,
-  busca: String // nova prop para manter o valor digitado
+  busca: String 
 })
 
 const busca = ref(props.busca || '')
@@ -131,7 +132,13 @@ function mudarPagina(url) {
 </script>
 
 <style scoped>
-    .td {
-        padding-left: 27px
-    }
+  .td {
+    padding-left: 27px
+  }
+
+  input[type="text"] {
+    border: none;
+    height: 25px;
+     width: 88%;
+  }
 </style>
