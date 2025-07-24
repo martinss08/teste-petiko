@@ -1,16 +1,37 @@
 <template>
   <header class="header">
-    <div class="container">
-      <h1 class="logo">to-do list</h1>
-      <nav class="nav">
-        <a href="/tarefa">Home</a>
-        <a v-if="isAdmin" href="/tarefa/create">Criar tarefa</a>
-        <a v-if="isAdmin" href="/user">Lista de Usuario</a>
-        <a href="">Perfil</a>
-        <button @click="logout">
-          Sair
+    <div class="container d-flex justify-content-between align-items-center" 
+    style="width: 100%;">
+      <h1 class="logo m-0">to-do list</h1>
+
+      <div class="dropdown">
+        <button class="btn text-white fs-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-list"></i>
         </button>
-      </nav>
+
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="/tarefa">Home</a></li>
+          <li>
+            <a class="dropdown-item" v-if="isAdmin" href="/tarefa/create">
+              Criar tarefa
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" v-if="isAdmin" href="/user">
+              Lista de Usuário
+            </a>
+          </li>
+          <li><a class="dropdown-item" href="#">Perfil</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <button class="dropdown-item text-danger" type="submit"
+              @click="logout"
+            >
+              Sair
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </header>
 </template>
@@ -28,32 +49,23 @@ function logout() {
 
 <style scoped>
 .header {
-  background-color: #4f46e5; 
-  color: white;
-  padding: .8rem;
+  background-color: #4f46e5;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.container {
-  max-width: 1200px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .logo {
   font-size: 1.25rem;
   font-weight: bold;
-}
-
-.nav a, button {
-  margin-left: 1rem;
-  text-decoration: none;
   color: white;
-  transition: text-decoration 0.2s;
 }
 
-.nav a:hover, button:hover {
-  text-decoration: underline;
+.dropdown .btn {
+  background: transparent;
+  border: none;
+  margin-right:-20px;
+}
+
+.dropdown .btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 </style>
