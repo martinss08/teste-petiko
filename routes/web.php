@@ -18,6 +18,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/tarefa', [TarefaController::class, 'store'])->name('tarefa.store');
     Route::get('/tarefa/{id}/edit', [TarefaController::class, 'edit'])->name('tarefa.edit');
     Route::put('/tarefa/{id}', [TarefaController::class, 'update'])->name('tarefa.update');
+    //ver isso
+    Route::put('/tarefa/{id}/toggle-status', [TarefaController::class, 'toggleStatus'])->name('tarefa.toggleStatus');
     Route::delete('/tarefa/{id}', [TarefaController::class, 'destroy'])->name('tarefa.destroy');
 
     Route::get('/user', [UserController::class, 'index'])->name('user.index');

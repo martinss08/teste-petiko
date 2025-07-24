@@ -62,6 +62,8 @@ class TarefaController extends Controller
     public function store(TarefaRequest $request)
     {
         $data = $request->validated();
+
+        $data['user_id'] = auth()->id();
         
         $this->model->create($data);
 
@@ -89,6 +91,19 @@ class TarefaController extends Controller
     
         return redirect()->route('tarefa.index');
     }
+
+        //ver isso
+    public function toggleStatus($id)
+    {
+        $tarefa = Tarefa::findOrFail($id);
+
+        // Supondo que status_id 1 = pendente, 2 = feito
+        $tarefa->status_id = $tarefa->status_id === 2 ? 1 : 2;
+        $tarefa->save();
+
+        return back(); // ou redirect()->route('tarefa.index');
+    }
+
 
     public function destroy($id)
     {

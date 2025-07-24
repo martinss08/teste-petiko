@@ -37,7 +37,25 @@
           <tr v-for="tarefa in tarefas.data" :key="tarefa.id">
             <td>{{ tarefa.id }}</td>
             <td>{{ tarefa.titulo }}</td>
-            <td>{{ tarefa.status?.nome }}</td>
+            
+              <!-- Ver -->
+            <td>
+              <span
+                @click="toggleStatus(tarefa.id)"
+                style="cursor: pointer;"
+              >
+                <i
+                  :class="{
+                    'bi': true,
+                    'bi-check-circle-fill text-success': tarefa.status?.nome === 'feito',
+                    'bi-x-circle-fill text-secondary': tarefa.status?.nome !== 'feito'
+                  }"
+                  style="font-size: 1.2rem;"
+                ></i>
+              </span>
+              {{ tarefa.status?.nome }}
+            </td>
+
             <td>{{ formatarData(tarefa.data_tarefa) }}</td>
             <td>
               <div class="d-flex justify-content-center align-items-center gap-3">
@@ -87,7 +105,6 @@ import Header from '@/Components/Header.vue'
 import { router } from '@inertiajs/vue3'
 import { ref, watch } from 'vue'
 
-
 const props = defineProps({
   tarefas: Object,
   busca: String 
@@ -110,6 +127,10 @@ watch(busca, (valor) => {
     })
   }
 })
+
+function toggleStatus(tarefaId) {
+  router.put(`/tarefa/${tarefaId}/toggle-status`)
+}
 
 const formatarData = (dataISO) => {
   if (!dataISO) return '';
