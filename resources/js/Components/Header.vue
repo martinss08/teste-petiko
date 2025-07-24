@@ -21,7 +21,16 @@
               Lista de Usuário
             </a>
           </li>
-          <li><a class="dropdown-item" href="#">Perfil</a></li>
+          <li>
+            <a class="dropdown-item" v-if="isAdmin" href="/register">
+              Cadastrar  Usuário
+            </a>
+          </li>
+          <li>
+            <a :href="`/user/${authUser.id}/perfil`" class="dropdown-item">
+              Perfil
+            </a>
+          </li>
           <li><hr class="dropdown-divider"></li>
           <li>
             <button class="dropdown-item text-danger" type="submit"
@@ -40,8 +49,12 @@
 import { usePage, router } from '@inertiajs/vue3'
 
 const page = usePage()
+const authUser = page.props.auth.user
 const isAdmin = page.props.auth.isAdmin
 
+defineProps({
+  authUser: Object,
+})
 function logout() {
   router.post('/logout')
 }

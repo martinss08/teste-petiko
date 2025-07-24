@@ -25,17 +25,18 @@
       <table class="table table-bordered table-hover text-center align-middle">
         <thead class="table-light">
           <tr>
-            <th scope="col">ID</th>
+            <th v-if="authUser && authUser.tipo_user_id === 2" scope="col">ID</th>
             <th scope="col">Tarefa</th>
             <th scope="col">Status</th>
             <th scope="col">Prazo</th>
+            <th v-if="authUser && authUser.tipo_user_id === 2">Dono</th>
             <th scope="col">Opções</th>
           </tr>
         </thead>
         
         <tbody>
           <tr v-for="tarefa in tarefas.data" :key="tarefa.id">
-            <td>{{ tarefa.id }}</td>
+            <td v-if="authUser && authUser.tipo_user_id === 2" >{{ tarefa.id }}</td>
             <td>{{ tarefa.titulo }}</td>
             
               <!-- Ver -->
@@ -57,10 +58,13 @@
             </td>
 
             <td>{{ formatarData(tarefa.data_tarefa) }}</td>
+            <td v-if="authUser && authUser.tipo_user_id === 2">{{ tarefa.user?.name }}</td>
+
             <td>
               <div class="d-flex justify-content-center align-items-center gap-3">
                 <button class="btn btn-link p-0 text-primary fs-5" 
                  @click="editar(tarefa.id)"
+                 v-if="authUser && authUser.tipo_user_id === 2"
                 >
                   <i class="bi bi-pencil-square"></i>
                 </button>
@@ -106,10 +110,10 @@ import { router } from '@inertiajs/vue3'
 import { ref, watch } from 'vue'
 
 const props = defineProps({
-  tarefas: Object,
-  busca: String 
+  tarefas: Array,
+  busca: String,
+  authUser: Object,
 })
-
 const busca = ref(props.busca || '')
 
 function buscar() {

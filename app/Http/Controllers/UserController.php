@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Inertia\Inertia;
-use App\Models\Status;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -29,7 +28,9 @@ class UserController extends Controller
 
     public function create()
     {
-        return Inertia::render('Auth/Register');
+        return Inertia::render('Auth/Register', [
+            'authUser' => auth()->user()
+        ]);
     }
 
     public function store(UserRequest $request)
@@ -38,7 +39,21 @@ class UserController extends Controller
                 
         $this->model->create($dados);
 
+        if (Auth::check()) {
+           return redirect()->route('user.index');
+        }
+
         return Inertia::render('Auth/Login');
+    }
+
+    public function show($id)
+    {
+        $user = $this->model->findOrFail($id);
+
+        return Inertia::render('Auth/Register', [
+            'user' => $user,
+            'authUser' => Auth::user(),
+        ]);
     }
 
     public function edit($id)

@@ -22,7 +22,7 @@ class TarefaController extends Controller
     {
         $busca = $request->input('busca');
 
-        $query = $this->model->with('status');
+        $query = $this->model->with(['status', 'user']);
 
         if (auth()->user()->tipo_user_id !== 2) {
             $query->where('user_id', auth()->id());
@@ -41,9 +41,11 @@ class TarefaController extends Controller
             ->paginate(10)
             ->withQueryString();
 
+
         return Inertia::render('Home', [
             'tarefas' => $tarefas,
-            'busca' => $busca
+            'busca' => $busca,
+            'authUser' => auth()->user()
         ]);
     }
 

@@ -1,73 +1,74 @@
 <template>
-    <Header v-if="authUser" />
-    <div class="caixa">
-        <h1 style="font-size: 2rem; text-align: center;padding: 10px; margin: 1rem auto;">
-            {{ props.user ? 'Editar Usuário' : 'Cadastrar Usuário' }}
-        </h1>
 
-        <form @submit.prevent="submit" style="padding:10px ;">
-            <div class="mb-3">
-                <label for="name" class="form-label">Nome</label>
-                <input v-model="form.name"type="text"
-                class="form-control"
-                :class="{ 'is-invalid': form.errors.name }"
-                />
-                <div class="invalid-feedback" v-if="form.errors.name">
-                    {{ form.errors.name }}
-                </div>
+<Header v-if="authUser" />
+<div class="caixa">
+    <h1 style="font-size: 2rem; text-align: center;padding: 10px; margin: 1rem auto;">
+        {{ user  ? (user.id === authUser.id ? 'Meu Perfil' : 'Editar Usuário') : 'Cadastrar Usuário' }}
+    </h1>
+
+    <form @submit.prevent="submit" style="padding:10px ;">
+        <div class="mb-3">
+            <label for="name" class="form-label">Nome</label>
+            <input v-model="form.name"type="text"
+            class="form-control"
+            :class="{ 'is-invalid': form.errors.name }"
+            />
+            <div class="invalid-feedback" v-if="form.errors.name">
+                {{ form.errors.name }}
             </div>
-
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input v-model="form.email" type="email"
-                class="form-control"
-                :class="{ 'is-invalid': form.errors.email }"
-                />
-                <div class="invalid-feedback" v-if="form.errors.email">
-                    {{ form.errors.email }}
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="password" class="form-label">Senha</label>
-                <input 
-                type="password"
-                v-model="form.password"
-                class="form-control"
-                :class="{ 'is-invalid': form.errors.password }"
-                />
-                <div class="invalid-feedback" v-if="form.errors.password">
-                    {{ form.errors.password }}
-                </div>
-            </div>
-
-            <div v-if="props.authUser?.tipo_user_id === 2" class="mb-3">
-                <label for="tipo_user_id" class="form-label">Tipo de Usuário</label>
-                <select v-model="form.tipo_user_id" class="form-control"
-                  :class="{ 'is-invalid': form.errors.tipo_user_id }">
-                    <option :value="1">Usuário</option>
-                    <option :value="2">Administrador</option>
-                </select>
-                <div class="invalid-feedback" v-if="form.errors.tipo_user_id">
-                    {{ form.errors.tipo_user_id }}
-                </div>
-            </div >
-
-            <div class="d-grid" style="margin: auto;padding: 7px;">
-                <button type="submit" class="btn btn-primary" style="margin-top: 2rem;">
-                    {{ props.user ? 'Atualizar' : 'Cadastrar' }}
-                </button>
-            </div>
-        </form>
-        <div style="margin:1rem 0; text-align: center;">
-            <button class="logs" v-if="!authUser"
-              @click="$inertia.visit('/login')">
-                Fazer login
-            </button>
         </div>
 
-        
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input v-model="form.email" type="email"
+            class="form-control"
+            :class="{ 'is-invalid': form.errors.email }"
+            />
+            <div class="invalid-feedback" v-if="form.errors.email">
+                {{ form.errors.email }}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
+            <input 
+            type="password"
+            v-model="form.password"
+            class="form-control"
+            :class="{ 'is-invalid': form.errors.password }"
+            />
+            <div class="invalid-feedback" v-if="form.errors.password">
+                {{ form.errors.password }}
+            </div>
+        </div>
+
+        <div v-if="authUser?.tipo_user_id === 2" class="mb-3">
+            <label for="tipo_user_id" class="form-label">Tipo de Usuário</label>
+            <select v-model="form.tipo_user_id" class="form-control"
+                :class="{ 'is-invalid': form.errors.tipo_user_id }">
+                <option :value="1">Usuário</option>
+                <option :value="2">Administrador</option>
+            </select>
+            <div class="invalid-feedback" v-if="form.errors.tipo_user_id">
+                {{ form.errors.tipo_user_id }}
+            </div>
+        </div >
+
+        <div class="d-grid" style="margin: auto;padding: 7px;">
+            <button type="submit" class="btn btn-primary" style="margin-top: 2rem;">
+                {{ user ? 'Atualizar' : 'Cadastrar' }}
+            </button>
+        </div>
+    </form>
+    <div style="margin:1rem 0; text-align: center;">
+        <button class="logs" v-if="!authUser"
+            @click="$inertia.visit('/login')">
+            Fazer login
+        </button>
     </div>
+
+    
+</div>
 </template>
 
 <script setup>
@@ -75,21 +76,24 @@ import Header from '@/Components/Header.vue'
 import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps({
-  user: Object,      
+  user: Object,
   authUser: Object
 })
 
+const user = props.user
+const authUser = props.authUser
+
 const form = useForm({
-  name: props.user?.name || '',
-  email: props.user?.email || '',
+  name: user?.name || '',
+  email: user?.email || '',
   password: '',
-  tipo_user_id: props.user ? Number(props.user.tipo_user_id) : 1
+  tipo_user_id: user ? Number(user.tipo_user_id) : 1
 })
 
 
 function submit() {
-  if (props.user) {
-    form.put(`/user/${props.user.id}`)
+  if (user) {
+    form.put(`/user/${user.id}`)
   } else {
     form.post('/register')
   }
