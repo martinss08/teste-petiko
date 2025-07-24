@@ -14,7 +14,6 @@ class StatusFactory extends Factory
         return [
             'nome' => $this->faker->randomElement([
                 'Pendente',
-                'Em andamento',
                 'Concluída'
             ]),
         ];

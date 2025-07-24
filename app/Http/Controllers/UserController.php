@@ -35,7 +35,7 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $dados = $request->validated();
-        
+                
         $this->model->create($dados);
 
         return Inertia::render('Auth/Login');
@@ -72,21 +72,21 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = $this->model->findOrFail($id);
-        $authUser = auth()->user();
+        // $authUser = auth()->user();
 
-        // Verifica se o usuário a ser deletado é o próprio usuário logado
-        if ($user->id === $authUser->id && $user->tipo_user_id == 2) {
-            // Verifica se existe outro admin no sistema
-            $otherAdminsCount = $this->model
-                ->where('tipo_user_id', 2)
-                ->where('id', '!=', $user->id)
-                ->count();
+        // // Verifica se o usuário a ser deletado é o próprio usuário logado
+        // if ($user->id === $authUser->id && $user->tipo_user_id == 2) {
+        //     // Verifica se existe outro admin no sistema
+        //     $otherAdminsCount = $this->model
+        //         ->where('tipo_user_id', 2)
+        //         ->where('id', '!=', $user->id)
+        //         ->count();
 
-            if ($otherAdminsCount === 0) {
-                // Bloqueia exclusão: último admin não pode se deletar
-                return redirect()->route('user.index')->with('error', 'Você não pode se deletar pois é o último administrador.');
-            }
-        }
+        //     if ($otherAdminsCount === 0) {
+        //         // Bloqueia exclusão: último admin não pode se deletar
+        //         return redirect()->route('user.index')->with('error', 'Você não pode se deletar pois é o último administrador.');
+        //     }
+        // }
 
         // Pode deletar normalmente
         $user->delete();

@@ -10,7 +10,9 @@ class TipoUser extends Model
     use HasFactory;
     
     protected $table = 'tipos_user';
-
+    
+    protected $fillable = ['nome'];
+    
     public function users()
     {
         return $this->hasMany(User::class, 'tipo_user_id');
