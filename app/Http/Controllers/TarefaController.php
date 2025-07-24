@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Status;
 use App\Models\Tarefa;
 use Illuminate\Http\Request;
 use App\Http\Requests\TarefaRequest;
-use App\Models\Status;
 
 class TarefaController extends Controller
 {
@@ -21,16 +22,22 @@ class TarefaController extends Controller
     {
         $busca = $request->input('busca');
 
-        $tarefas = $this->model
-            ->with('status')
-            ->where('user_id', auth()->id())
-            ->when($busca, function ($query, $busca) {
-                $query->where('titulo', 'like', "%{$busca}%")
-                    ->orWhereHas('status', function ($q) use ($busca) {
-                        $q->where('nome', 'like', "%{$busca}%");
-                    });
-            })
-            ->orderBy('id')
+        $query = $this->model->with('status');
+
+        if (auth()->user()->tipo_user_id !== 2) {
+            $query->where('user_id', auth()->id());
+        }
+
+        if ($busca) {
+            $query->where(function ($q) use ($busca) {
+                $q->where('titulo', 'like', "%{$busca}%")
+                ->orWhereHas('status', function ($q2) use ($busca) {
+                    $q2->where('nome', 'like', "%{$busca}%");
+                });
+            });
+        }
+
+        $tarefas = $query->orderBy('id')
             ->paginate(10)
             ->withQueryString();
 
@@ -43,19 +50,19 @@ class TarefaController extends Controller
     public function create()
     {
         $status = Status::select('id', 'nome')->get();
+        $usuarios = User::select('id', 'name')->get();
 
         return Inertia::render('FormTarefa', [
-            'statusOptions' => $status
+            'status' => $status,
+            'users' => $usuarios, 
+            'authUser' => auth()->user(),
         ]);
-        // return Inertia::render('FormTarefa');
     }
 
     public function store(TarefaRequest $request)
     {
         $data = $request->validated();
-
-        $data['user_id'] = auth()->id();
-     
+        
         $this->model->create($data);
 
         return redirect()->route('tarefa.index');
@@ -63,13 +70,13 @@ class TarefaController extends Controller
 
     public function edit($id)
     {
-        $tarefa = $this->model->findOrFail($id);
+        $tarefa = $this->model->with('status')->findOrFail($id);
 
         $status = Status::select('id', 'nome')->get();
 
         return Inertia::render('FormTarefa', [
             'tarefa' => $tarefa,
-            'statusOptions' => $status
+            'status' => $status
         ]);
     }
     public function update($id, TarefaRequest $request)

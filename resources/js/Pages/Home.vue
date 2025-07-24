@@ -2,20 +2,21 @@
   <Header />
 
   <div class="d-flex justify-content-end mt-2">
-     <div class="d-flex me-2" >
-         <form @submit.prevent="buscar" 
-          class="d-flex p-1 border rounded-pill" style="border-color: #a19d9d79;">
-            <input type="text" v-model="busca" style="outline: none; box-shadow: none; border: none;"
-            placeholder="Buscar Tarefa"
-            >
-            <button class="border-0 bg-transparent" type="submit" >
-                <i class="bi bi-search"></i>
-            </button>
-         </form>
-     </div>
+    <div class="d-flex me-2" >
+      <form @submit.prevent="buscar" 
+      class="d-flex p-1 border rounded-pill" style="border-color: #a19d9d79;">
+        <input class="form-control border-0 shadow-none" type="text" 
+         v-model="busca" 
+         placeholder="Buscar Tarefa"
+        >
+        <button class="border-0 bg-transparent" type="submit" >
+            <i class="bi bi-search"></i>
+        </button>
+      </form>
+    </div>
  </div>
   
-  <section class="container my-5">
+  <div class="container my-5">
     <h1 class="text-center mb-4 fs-1">
       Lista de Tarefas
     </h1>
@@ -40,10 +41,14 @@
             <td>{{ formatarData(tarefa.data_tarefa) }}</td>
             <td>
               <div class="d-flex justify-content-center align-items-center gap-3">
-                <button class="btn btn-link p-0 text-primary fs-5" @click="editar(tarefa.id)">
+                <button class="btn btn-link p-0 text-primary fs-5" 
+                 @click="editar(tarefa.id)"
+                >
                   <i class="bi bi-pencil-square"></i>
                 </button>
-                <button class="btn btn-link p-0 text-danger fs-5" @click="deletar(tarefa.id)">
+                <button class="btn btn-link p-0 text-danger fs-5" 
+                 @click="deletar(tarefa.id)"
+                >
                   <i class="bi bi-trash"></i>
                 </button>
               </div>
@@ -51,7 +56,9 @@
           </tr>
 
           <tr v-if="tarefas.data.length === 0">
-            <td colspan="3" class="text-center text-muted">Nenhuma tarefa encontrada.</td>
+            <td colspan="3" class="text-center text-muted">
+              Nenhuma tarefa encontrada.
+            </td>
           </tr>
         </tbody>
       </table>
@@ -72,7 +79,7 @@
         </button>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
@@ -139,6 +146,6 @@ function mudarPagina(url) {
   input[type="text"] {
     border: none;
     height: 25px;
-     width: 88%;
+    width: 88%;
   }
 </style>

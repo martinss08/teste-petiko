@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TipoUser extends Model
 {
+    protected $table = 'tipos_user';
 
     public function users()
     {

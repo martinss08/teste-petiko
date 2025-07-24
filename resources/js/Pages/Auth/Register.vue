@@ -44,9 +44,9 @@
             <div v-if="props.authUser?.tipo_user_id === 2" class="mb-3">
                 <label for="tipo_user_id" class="form-label">Tipo de Usuário</label>
                 <select v-model="form.tipo_user_id" class="form-control"
-                        :class="{ 'is-invalid': form.errors.tipo_user_id }">
-                    <option value="1">Usuário Comum</option>
-                    <option value="2">Administrador</option>
+                  :class="{ 'is-invalid': form.errors.tipo_user_id }">
+                    <option :value="1">Usuário</option>
+                    <option :value="2">Administrador</option>
                 </select>
                 <div class="invalid-feedback" v-if="form.errors.tipo_user_id">
                     {{ form.errors.tipo_user_id }}
@@ -60,7 +60,8 @@
             </div>
         </form>
         <div style="margin:1rem 0; text-align: center;">
-            <button class="logs" @click="$inertia.visit('/login')">
+            <button class="logs" v-if="!authUser"
+              @click="$inertia.visit('/login')">
                 Fazer login
             </button>
         </div>
@@ -71,10 +72,10 @@
 
 <script setup>
 import Header from '@/Components/Header.vue'
-import { router, useForm } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps({
-  user: Object,       // recebe o usuário (para edição)
+  user: Object,      
   authUser: Object
 })
 
@@ -82,7 +83,7 @@ const form = useForm({
   name: props.user?.name || '',
   email: props.user?.email || '',
   password: '',
-  tipo_user_id: props.user?.tipo_user_id || 1
+  tipo_user_id: props.user ? Number(props.user.tipo_user_id) : 1
 })
 
 
@@ -90,7 +91,7 @@ function submit() {
   if (props.user) {
     form.put(`/user/${props.user.id}`)
   } else {
-    form.post(route('register'))
+    form.post('/register')
   }
 }
 </script>

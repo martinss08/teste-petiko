@@ -29,8 +29,8 @@
         </form>
 
         <div style="margin:1rem 0; text-align: center;">
-            <button class="logs" @click="irParaCadastro">
-             Fazer Cadastro
+            <button type="button" class="logs" @click="irParaCadastro">
+            Fazer Cadastro
             </button>
         </div>
     </div>
@@ -50,7 +50,7 @@ function login() {
 }
 
 function irParaCadastro() {
-   router.get('/register')  // ou router.get(route('register'))
+  router.get('/register')
 }
 </script>
 

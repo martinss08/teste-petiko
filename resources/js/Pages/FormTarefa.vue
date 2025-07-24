@@ -2,7 +2,9 @@
     <Header />
 
     <div>
-        <h2>Criação tarefa</h2>
+        <h1 class="text-center mb-4 fs-1" style="margin: 2.3rem 0 0 0;">
+           {{ props.tarefa?.id ? 'Edição de Tarefa' : 'Criação de Tarefa' }}
+        </h1>
 
          <div class="container_livro">
 
@@ -10,8 +12,8 @@
             <div class="box">
                 <label for="titulo">Título</label>
                 <input v-model="form.titulo" type="text"
-                class="form-control"
-                :class="{ 'is-invalid': form.errors.titulo }"
+                  class="form-control"
+                  :class="{ 'is-invalid': form.errors.titulo }"
                 />
                 <div class="invalid-feedback" v-if="form.errors.titulo">
                     {{ form.errors.titulo ?? 'sem erro'}}
@@ -21,8 +23,8 @@
             <div class="box">
                 <label for="descricao">Descrição</label>
                 <input v-model="form.descricao" type="text" id="descricao" 
-                class="form-control"
-                :class="{ 'is-invalid': form.errors.descricao }"
+                  class="form-control"
+                  :class="{ 'is-invalid': form.errors.descricao }"
                 />
 
                 <div class="invalid-feedback" v-if="form.errors.descricao">
@@ -60,10 +62,28 @@
                 {{ form.errors.status_id }}
               </div>
             </div>
-            
+
+            <div class="mb-3" v-if="authUser.tipo_user_id === 2">
+              <label for="user_id" class="form-label">Atribuir a</label>
+              <select v-model="form.user_id" class="form-control">
+                <option disabled value="">
+                  Selecione um usuário
+                </option>
+                <option v-for="user in users" :key="user.id"
+                 :value="user.id"
+                 >
+                  {{ user.name }}
+                </option>
+                
+              </select>
+              <div class="invalid-feedback" v-if="form.errors.user_id">
+                {{ form.errors.user_id }}
+              </div>
+            </div>
+
             <div style="margin: 2rem auto 0 auto;">
               <button type="submit" class="btn btn-primary" :disabled="form.processing">
-                Salvar Tarefa
+                {{ props.tarefa?.id ? 'Atualizar Tarefa' : 'Salvar Tarefa' }}
               </button>
             </div>
           </form>
@@ -84,6 +104,14 @@ const props = defineProps({
   statusOptions: {
     type: Array,
     default: () => []
+  },
+  users: {  
+    type: Array,
+    default: () => []
+  },
+  authUser: {
+    type: Object,
+    default: () => ({}),
   }
 });
 
@@ -91,8 +119,9 @@ const props = defineProps({
 const form = useForm({
   titulo: props.tarefa?.titulo || '',
   descricao: props.tarefa?.descricao || '',
-  status_id: props.tarefa?.status?.id || 1,
+  status_id: props.tarefa?.status_id || 1,
   data_tarefa: props.tarefa?.data_tarefa || '',
+  user_id: props.tarefa?.user_id || '',
 })
 
 const submit = () => {
@@ -109,7 +138,7 @@ const submit = () => {
 
   .container_livro {
     width: 405px;
-    margin: 3rem auto 2rem auto;
+    margin: 2rem auto 2rem auto;
     padding: 2rem 1rem;
     border: 1px solid #a19d9d79;
     border-radius: 0.7rem;

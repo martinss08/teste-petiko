@@ -26,6 +26,7 @@ class TarefaRequest extends FormRequest
             'descricao' => ['nullable', 'max:230'],
             'status_id' => ['required', 'exists:status,id'],
             'data_tarefa' => ['required', 'date', 'after_or_equal:today'],
+            'user_id' => ['required', 'exists:users,id'],
         ];
     }
     
@@ -43,7 +44,10 @@ class TarefaRequest extends FormRequest
 
             'data_tarefa.required' => 'A data da tarefa é obrigatória.',
             'data_tarefa.date' => 'Informe uma data válida.',
-            'data_tarefa.after_or_equal' => 'A data deve ser hoje ou futura.'
+            'data_tarefa.after_or_equal' => 'A data deve ser hoje ou futura.',
+
+            'user_id.required' => 'O campo de usuário é obrigatório.',
+            'user_id.exists'   => 'O usuário selecionado é inválido.'
         ];
     }
 }

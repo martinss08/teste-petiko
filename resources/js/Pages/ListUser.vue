@@ -1,9 +1,9 @@
 <template>
     <Header />
-    <h1 style="text-align: center; margin: 3rem auto 0 auto; font-size: 2.7rem;">
+    <h1 class="text-center mt-5 mx-auto" style="font-size: 2.7rem;">
         Lista de usuário
     </h1>
-    <div style="width: 90%; margin: 3rem auto 0 auto;">
+    <div class="w-100 mt-5 mx-auto" style="max-width: 90%;">
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-center align-middle">
                 <thead class="table-light">
@@ -18,7 +18,7 @@
                     <tr v-for="user in users.data" :key="user.id">
                     <td>{{ user.id }}</td>
                     <td>{{ user.name }}</td>
-                    <td>{{ user.tipo_user_id?.nome }}</td>
+                    <td>{{ user.tipo_usuario?.nome }}</td>
                     <td>
                         <div class="d-flex justify-content-center align-items-center gap-3">
                             <button class="btn btn-link p-0 text-primary fs-5" 
