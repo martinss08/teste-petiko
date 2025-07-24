@@ -19,7 +19,7 @@ class TarefaController extends Controller
 
     public function index(Request $request)
     {
-         $busca = $request->input('busca');
+        $busca = $request->input('busca');
 
         $tarefas = $this->model
             ->with('status')
@@ -47,6 +47,7 @@ class TarefaController extends Controller
         return Inertia::render('FormTarefa', [
             'statusOptions' => $status
         ]);
+        // return Inertia::render('FormTarefa');
     }
 
     public function store(TarefaRequest $request)

@@ -4,7 +4,8 @@
       <h1 class="logo">to-do list</h1>
       <nav class="nav">
         <a href="/tarefa">Home</a>
-        <a href="/tarefa/create">Criar tarefa</a>
+        <a v-if="isAdmin" href="/tarefa/create">Criar tarefa</a>
+        <a v-if="isAdmin" href="/user">Lista de Usuario</a>
         <a href="">Perfil</a>
         <button @click="logout">
           Sair
@@ -15,7 +16,10 @@
 </template>
 
 <script setup>
-import { router } from '@inertiajs/vue3'
+import { usePage, router } from '@inertiajs/vue3'
+
+const page = usePage()
+const isAdmin = page.props.auth.isAdmin
 
 function logout() {
   router.post('/logout')

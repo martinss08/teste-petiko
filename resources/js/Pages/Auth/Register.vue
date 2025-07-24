@@ -1,8 +1,8 @@
 <template>
-
+    <Header v-if="authUser" />
     <div class="caixa">
         <h1 style="font-size: 2rem; text-align: center;padding: 10px; margin: 1rem auto;">
-            Cadastro de Usuário
+            {{ props.user ? 'Editar Usuário' : 'Cadastrar Usuário' }}
         </h1>
 
         <form @submit.prevent="submit" style="padding:10px ;">
@@ -30,7 +30,9 @@
 
             <div class="mb-3">
                 <label for="password" class="form-label">Senha</label>
-                <input v-model="form.password" type="password"
+                <input 
+                type="password"
+                v-model="form.password"
                 class="form-control"
                 :class="{ 'is-invalid': form.errors.password }"
                 />
@@ -39,9 +41,21 @@
                 </div>
             </div>
 
+            <div v-if="props.authUser?.tipo_user_id === 2" class="mb-3">
+                <label for="tipo_user_id" class="form-label">Tipo de Usuário</label>
+                <select v-model="form.tipo_user_id" class="form-control"
+                        :class="{ 'is-invalid': form.errors.tipo_user_id }">
+                    <option value="1">Usuário Comum</option>
+                    <option value="2">Administrador</option>
+                </select>
+                <div class="invalid-feedback" v-if="form.errors.tipo_user_id">
+                    {{ form.errors.tipo_user_id }}
+                </div>
+            </div >
+
             <div class="d-grid" style="margin: auto;padding: 7px;">
                 <button type="submit" class="btn btn-primary" style="margin-top: 2rem;">
-                    Cadastrar
+                    {{ props.user ? 'Atualizar' : 'Cadastrar' }}
                 </button>
             </div>
         </form>
@@ -56,17 +70,28 @@
 </template>
 
 <script setup>
-import { useForm } from '@inertiajs/vue3'
-import { Head } from '@inertiajs/vue3'
+import Header from '@/Components/Header.vue'
+import { router, useForm } from '@inertiajs/vue3'
 
-const form = useForm({
-  name: '',
-  email: '',
-  password: '',
+const props = defineProps({
+  user: Object,       // recebe o usuário (para edição)
+  authUser: Object
 })
 
-const submit = () => {
-  form.post('/register')
+const form = useForm({
+  name: props.user?.name || '',
+  email: props.user?.email || '',
+  password: '',
+  tipo_user_id: props.user?.tipo_user_id || 1
+})
+
+
+function submit() {
+  if (props.user) {
+    form.put(`/user/${props.user.id}`)
+  } else {
+    form.post(route('register'))
+  }
 }
 </script>
 
