@@ -58,10 +58,10 @@ Após rodar os seeders, você poderá acessar com:
 | Ação                          | Comando                                                 |
 |------------------------------|----------------------------------------------------------|
 | Subir containers             | `docker compose up -d`                                   |
-| Parar containers             | `docker compose down`                                    |
 | Compilar assets frontend     | `npm run dev`                                            |
+| Parar containers             | `docker compose down`                                    |
 | Rodar os testes                                                                         | 
-|    `docker compose exec app php artisan test --filter=UserControllerTest`             |
+|    `docker compose exec app php artisan test --filter=UserControllerTest`               |
 |    `docker compose exec app php artisan test --filter=TarefaControllerTest`             |
 
 
