@@ -23,7 +23,7 @@ make build
 
 Após rodar os seeders, você poderá acessar com:
 
-- **Email:** `admin@example.com`  
+- **Email:** `admin@admin.com`  
 - **Senha:** `123456`
 
 ---
@@ -35,7 +35,7 @@ Após rodar os seeders, você poderá acessar com:
 | Subir containers              | `make up`                                                |
 | Parar containers              | `make down`                                              |
 | Rodar os testes               | `make test`                                              | 
-        
+
 ---
 
 ## 💡 Estrutura
