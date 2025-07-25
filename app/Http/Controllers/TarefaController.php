@@ -65,7 +65,9 @@ class TarefaController extends Controller
     {
         $data = $request->validated();
 
-        $data['user_id'] = auth()->id();
+        if (auth()->user()->tipo_user_id != 2) {
+            $data['user_id'] = auth()->id();
+        }
         
         $this->model->create($data);
 
@@ -75,12 +77,13 @@ class TarefaController extends Controller
     public function edit($id)
     {
         $tarefa = $this->model->with('status')->findOrFail($id);
-
+        
         $status = Status::select('id', 'nome')->get();
 
         return Inertia::render('FormTarefa', [
             'tarefa' => $tarefa,
-            'status' => $status
+            'status' => $status,
+            
         ]);
     }
     public function update($id, TarefaRequest $request)

@@ -51,7 +51,7 @@
               >
                 <option disabled value="">Selecione um status</option>
                 <option
-                  v-for="option in statusOptions"
+                  v-for="option in status"
                   :key="option.id"
                   :value="option.id"
                 >
@@ -101,7 +101,7 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
-  statusOptions: {
+  status: {
     type: Array,
     default: () => []
   },

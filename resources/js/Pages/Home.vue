@@ -38,8 +38,6 @@
           <tr v-for="tarefa in tarefas.data" :key="tarefa.id">
             <td v-if="authUser && authUser.tipo_user_id === 2" >{{ tarefa.id }}</td>
             <td>{{ tarefa.titulo }}</td>
-            
-              <!-- Ver -->
             <td>
               <span
                 @click="toggleStatus(tarefa.id)"
@@ -48,15 +46,14 @@
                 <i
                   :class="{
                     'bi': true,
-                    'bi-check-circle-fill text-success': tarefa.status?.nome === 'feito',
-                    'bi-x-circle-fill text-secondary': tarefa.status?.nome !== 'feito'
+                    'bi-check-circle-fill text-success': tarefa.status?.nome === 'Concluída',
+                    'bi-x-circle-fill text-secondary': tarefa.status?.nome !== 'Concluída'
                   }"
                   style="font-size: 1.2rem;"
                 ></i>
               </span>
               {{ tarefa.status?.nome }}
             </td>
-
             <td>{{ formatarData(tarefa.data_tarefa) }}</td>
             <td v-if="authUser && authUser.tipo_user_id === 2">{{ tarefa.user?.name }}</td>
 

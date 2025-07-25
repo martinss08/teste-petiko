@@ -1,5 +1,20 @@
 <template>
     <Header />
+    <div class="d-flex justify-content-end mt-2">
+        <div class="d-flex me-2" >
+            <form @submit.prevent="buscar" 
+            class="d-flex p-1 border rounded-pill" style="border-color: #a19d9d79;">
+                <input class="form-control border-0 shadow-none" type="text" 
+                v-model="busca" 
+                placeholder="Buscar Tarefa"
+                >
+                <button class="border-0 bg-transparent" type="submit" >
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <h1 class="text-center mt-5 mx-auto" style="font-size: 2.7rem;">
         Lista de usuário
     </h1>
@@ -62,9 +77,28 @@
 <script setup>
 import Header from '@/Components/Header.vue'
 import { router } from '@inertiajs/vue3'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
+  busca: String,
   users: Object
+})
+const busca = ref(props.busca || '')
+
+function buscar() {
+  router.get('/user', { busca: busca.value }, {
+    preserveState: true,
+    preserveScroll: true,
+  })
+}
+
+watch(busca, (valor) => {
+  if (valor === '') {
+    router.get('/user', {}, {
+      preserveState: true,
+      preserveScroll: true,
+    })
+  }
 })
 
 function mudarPagina(url) {
@@ -82,3 +116,11 @@ function deletar(id) {
     }
 }
 </script>
+
+<style>
+    input[type="text"] {
+        border: none;
+        height: 25px;
+        width: 88%;
+    }
+</style>

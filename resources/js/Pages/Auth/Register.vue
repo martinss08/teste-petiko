@@ -2,7 +2,7 @@
 
 <Header v-if="authUser" />
 <div class="caixa">
-    <h1 style="font-size: 2rem; text-align: center;padding: 10px; margin: 1rem auto;">
+    <h1 class="fs-2 text-center p-2 my-3 mx-auto">
         {{ user  ? (user.id === authUser.id ? 'Meu Perfil' : 'Editar Usuário') : 'Cadastrar Usuário' }}
     </h1>
 

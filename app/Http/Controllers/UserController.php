@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -17,12 +18,26 @@ class UserController extends Controller
         $this->model = $model;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $users = $this->model->with('tipoUsuario')->paginate(10);
+        $busca = $request->input('busca');
+
+        $query = $this->model->with('tipoUsuario');
+
+        if ($busca) {
+            $query->where(function ($q) use ($busca) {
+                $q->where('name', 'like', "%{$busca}%")
+                ->orWhereHas('tipoUsuario', function ($q2) use ($busca) {
+                    $q2->where('nome', 'like', "%{$busca}%");
+                });
+            });
+        }
+
+        $users = $query->orderBy('id')->paginate(10)->withQueryString();
 
         return Inertia::render('ListUser', [
-            'users' => $users  
+            'users' => $users,
+            'busca' => $busca
         ]);
     }
 
@@ -80,33 +95,33 @@ class UserController extends Controller
         }
 
         $user->update($dados);
+
+        if (Auth::user()->tipo_user_id === 2) {
+            return redirect()->route('user.index');
+        }
         
-        return redirect()->route('user.index');
+        return redirect()->route('tarefa.index');
     }
 
     public function destroy($id)
     {
         $user = $this->model->findOrFail($id);
-        // $authUser = auth()->user();
+        $authUser = auth()->user();
 
-        // // Verifica se o usuário a ser deletado é o próprio usuário logado
-        // if ($user->id === $authUser->id && $user->tipo_user_id == 2) {
-        //     // Verifica se existe outro admin no sistema
-        //     $otherAdminsCount = $this->model
-        //         ->where('tipo_user_id', 2)
-        //         ->where('id', '!=', $user->id)
-        //         ->count();
+        if ($user->id === $authUser->id && $user->tipo_user_id == 2) {
+            $otherAdminsCount = $this->model
+                ->where('tipo_user_id', 2)
+                ->where('id', '!=', $user->id)
+                ->count();
 
-        //     if ($otherAdminsCount === 0) {
-        //         // Bloqueia exclusão: último admin não pode se deletar
-        //         return redirect()->route('user.index')->with('error', 'Você não pode se deletar pois é o último administrador.');
-        //     }
-        // }
+            if ($otherAdminsCount === 0) {
+                return redirect()->route('user.index')->with('error', 'Você não pode se deletar, pois é o último administrador.');
+            }
+        }
 
-        // Pode deletar normalmente
         $user->delete();
 
-        return redirect()->route('user.index')->with('success', 'Usuário deletado com sucesso.');
+        return redirect()->route('user.index');
     }
 
 }
