@@ -32,17 +32,13 @@ class VerificarTarefasVencidas extends Command
 
         $tarefasVencidas = Tarefa::where('data_tarefa', '<', $hoje)
             ->whereHas('status', function ($q) {
-                $q->where('nome', '!=', 'Concluída'); // só tarefas não concluídas
+                $q->where('nome', '!=', 'Concluída');
             })
             ->get();
 
         foreach ($tarefasVencidas as $tarefa) {
-            // Aqui você pode: mudar o status, notificar, ou logar
-            Log::info("Tarefa atrasada: {$tarefa->titulo} (ID {$tarefa->id})");
 
-            // Exemplo: atualizar status para "Atrasada"
-            // $tarefa->status_id = 3; // supondo que 3 = 'Atrasada'
-            // $tarefa->save();
+            Log::info("Tarefa atrasada: {$tarefa->titulo} (ID {$tarefa->id})");
         }
 
         $this->info("Verificação concluída. Total atrasadas: " . $tarefasVencidas->count());
