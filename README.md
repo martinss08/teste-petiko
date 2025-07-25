@@ -1,8 +1,26 @@
 # 📝 To-do List Laravet + Vue.js
-
+![Home](./resources/img/home.png)
 Este projeto é uma aplicação de gerenciamento de tarefas desenvolvida com Laravel (backend) e Vue.js (frontend via Inertia.js), com ambiente configurado via Docker.
 
 ---
+## Funcionalidades
+- CRUD de Usuario
+- CRUD de Tarefa
+#### Funcionalidades bônus
+- Download de lista de tarefas em CSV
+- Barra de pesquisa, para localizar tarefas/usuarios
+- Notificação quando há tarefas atrasadas
+- Nivel de permissão
+    - Apenas usuarios administradores conseguem cadastrar usuarios e tarefas 
+    - Modificar nivel do usuario
+- Command para verificar tarefas vencidas 
+#### Uso do Framework 
+- Validetions [FormRequest]
+- Migrations 
+- Seeders
+- Relationships  
+- Tests
+- Commands
 
 ## 🚀 Como rodar o projeto localmente
 

@@ -24,7 +24,9 @@
       Lista de Tarefas
     </h1>
 
-    <a href="/tarefa/create"class="btn btn-primary mr-5" style="margin-bottom: 1rem;">
+    <a href="/tarefa/create"class="btn btn-primary mr-5" style="margin-bottom: 1rem;"
+     v-if="authUser && authUser.tipo_user_id === 2"
+     >
       Nova Tarefa
     </a>
 
