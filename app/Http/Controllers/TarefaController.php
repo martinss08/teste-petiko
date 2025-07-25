@@ -8,6 +8,7 @@ use App\Models\Status;
 use App\Models\Tarefa;
 use Illuminate\Http\Request;
 use App\Http\Requests\TarefaRequest;
+use Illuminate\Support\Facades\Response;
 
 class TarefaController extends Controller
 {
@@ -97,16 +98,53 @@ class TarefaController extends Controller
         return redirect()->route('tarefa.index');
     }
 
-        //ver isso
+        
     public function toggleStatus($id)
     {
         $tarefa = Tarefa::findOrFail($id);
 
-        // Supondo que status_id 1 = pendente, 2 = feito
         $tarefa->status_id = $tarefa->status_id === 2 ? 1 : 2;
         $tarefa->save();
 
-        return back(); // ou redirect()->route('tarefa.index');
+        return back(); 
+    }
+
+    public function exportarCSV()
+    {
+        $tarefas = $this->model->with(['status', 'user'])->get();
+
+        $csvHeader = [
+            'ID', 'Título', 'Descrição', 'Data', 'Status', 'Responsável'
+        ];
+
+        $csvData = $tarefas->map(function ($tarefa) {
+            return [
+                $tarefa->id,
+                $tarefa->titulo,
+                $tarefa->descricao,
+                $tarefa->data_tarefa,
+                $tarefa->status->nome ?? 'sem status',
+                $tarefa->user->name ?? 'sem responsável',
+            ];
+        });
+
+        $filename = 'tarefas_' . now()->format('Ymd_His') . '.csv';
+
+        $handle = fopen('php://temp', 'r+');
+        fputcsv($handle, $csvHeader);
+
+        foreach ($csvData as $row) {
+            fputcsv($handle, $row);
+        }
+
+        rewind($handle);
+        $contents = stream_get_contents($handle);
+        fclose($handle);
+
+        return Response::make($contents, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ]);
     }
 
 

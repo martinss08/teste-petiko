@@ -63,7 +63,7 @@
               </div>
             </div>
 
-            <div class="mb-3" v-if="authUser.tipo_user_id === 2">
+            <div class="mb-box" v-if="authUser.tipo_user_id === 2">
               <label for="user_id" class="form-label">Atribuir a</label>
               <select v-model="form.user_id" class="form-control">
                 <option disabled value="">

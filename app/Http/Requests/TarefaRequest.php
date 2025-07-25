@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TarefaRequest extends FormRequest
@@ -22,7 +23,11 @@ class TarefaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'titulo' => ['required', 'min:3', 'max:255'],
+            'titulo' => ['required', 'min:3', 'max:255',
+                Rule::unique('tarefas')->where(function ($query) {
+                    return $query->where('user_id', $this->input('user_id'));
+                })
+            ],
             'descricao' => ['nullable', 'max:230'],
             'status_id' => ['required', 'exists:status,id'],
             'data_tarefa' => ['required', 'date', 'after_or_equal:today'],
@@ -36,6 +41,7 @@ class TarefaRequest extends FormRequest
             'titulo.required' => 'O campo título é obrigatório.',
             'titulo.min'      => 'O título deve ter no mínimo 3 caracteres.',
             'titulo.max'      => 'O título não pode ter mais que 255 caracteres.',
+            'titulo.unique' => 'Este usuário já possui uma tarefa com esse título.',
 
             'descricao.max'   => 'A descrição não pode ter mais que 230 caracteres.',
 

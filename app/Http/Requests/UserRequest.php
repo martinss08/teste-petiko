@@ -25,7 +25,7 @@ class UserRequest extends FormRequest
 
         return [
             'name' => ['required', 'min:3', 'max:100', 'unique:users,name,' . $userId],
-            'email' => ['required', 'email', 'unique:users,email,' . $userId],
+            'email' => ['required', 'email:rfc,dns', 'unique:users,email,' . $userId],
             'password' => $this->isMethod('post') ? 'required|min:6' : 'nullable|min:6',
             'tipo_user_id' => ['required', 'exists:tipos_user,id']
         ];

@@ -17,6 +17,13 @@ class Tarefa extends Model
         'user_id'
     ];
 
+    protected $appends = ['atrasada'];
+
+    public function getAtrasadaAttribute()
+    {
+        return $this->data_tarefa < now()->toDateString();
+    }
+
     public function status()
     {
         return $this->belongsTo(Status::class, 'status_id');

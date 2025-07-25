@@ -6,7 +6,7 @@
             class="d-flex p-1 border rounded-pill" style="border-color: #a19d9d79;">
                 <input class="form-control border-0 shadow-none" type="text" 
                 v-model="busca" 
-                placeholder="Buscar Tarefa"
+                placeholder="Buscar Usuario"
                 >
                 <button class="border-0 bg-transparent" type="submit" >
                     <i class="bi bi-search"></i>

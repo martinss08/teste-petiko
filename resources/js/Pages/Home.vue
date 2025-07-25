@@ -1,5 +1,8 @@
 <template>
   <Header />
+  <div v-if="tarefas.data.some(t => t.atrasada)" class="alert alert-warning text-center">
+    Você tem tarefas atrasadas! Verifique os prazos.
+  </div>
 
   <div class="d-flex justify-content-end mt-2">
     <div class="d-flex me-2" >
@@ -20,6 +23,10 @@
     <h1 class="text-center mb-4 fs-1">
       Lista de Tarefas
     </h1>
+
+    <button @click="exportarCSV" class="btn btn-success" style="margin-bottom: 1rem;">
+      Exportar CSV
+    </button>
 
     <div class="table-responsive">
       <table class="table table-bordered table-hover text-center align-middle">
@@ -54,7 +61,13 @@
               </span>
               {{ tarefa.status?.nome }}
             </td>
-            <td>{{ formatarData(tarefa.data_tarefa) }}</td>
+            <td :class="{ 'text-danger fw-bold': tarefa.atrasada }">
+              {{ formatarData(tarefa.data_tarefa) }}
+              <span v-if="tarefa.atrasada">
+                <i class="bi bi-exclamation-circle-fill text-danger ms-1" title="Prazo vencido"></i>
+              </span>
+            </td>
+            
             <td v-if="authUser && authUser.tipo_user_id === 2">{{ tarefa.user?.name }}</td>
 
             <td>
@@ -129,6 +142,10 @@ watch(busca, (valor) => {
     })
   }
 })
+
+const exportarCSV = () => {
+  window.open('/tarefas/exportar', '_blank')
+}
 
 function toggleStatus(tarefaId) {
   router.put(`/tarefa/${tarefaId}/toggle-status`)
