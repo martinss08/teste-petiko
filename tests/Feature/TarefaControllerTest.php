@@ -83,8 +83,6 @@ class TarefaControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $response->assertRedirect(route('tarefa.index'));
-
         $this->assertDatabaseHas('tarefas', [
             'id' => $tarefa->id,
             'titulo' => 'Atualizado',

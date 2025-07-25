@@ -19,8 +19,8 @@ Este projeto é uma aplicação de gerenciamento de tarefas desenvolvida com Lar
 - Migrations 
 - Seeders
 - Relationships  
-- Tests
 - Commands
+- Tests
 
 ## 🚀 Como rodar o projeto localmente
 
@@ -42,7 +42,7 @@ Para acessar o projeto, acesse [http://localhost:8000](http://localhost:8000)
 
 ## 👤 Usuário padrão (seeded)
 
-Após rodar os seeders, você poderá acessar com:
+Após rodar `make build`, você poderá acessar com:
 
 - **Email:** `admin@admin.com`  
 - **Senha:** `123456`
@@ -58,6 +58,9 @@ Após rodar os seeders, você poderá acessar com:
 | Rodar os testes               | `make test`                                              | 
 
 ---
+
+## Implementado Testes Automatizados
+![Teste](./resources/img/tests.png)
 
 ## 💡 Estrutura
 
