@@ -42,12 +42,15 @@ class UserControllerTest extends TestCase
 
     public function test_criar_usuarios()
     {
-        $tipo = TipoUser::create(['nome' => 'usuario']);
+        $tipo = TipoUser::factory()->create([
+            'nome' => 'Administrador' 
+        ]);
 
         $dados = [
-            'name' => 'Alfred',
-            'email' => 'alfred@example.com',
-            'password' => bcrypt('senha123'), 
+            'name' => 'Alef',
+            'email' => 'alef@gmail.com',
+            'password' => 'senha123',
+            'password_confirmation' => 'senha123',
             'tipo_user_id' => $tipo->id
         ];
 
@@ -55,8 +58,8 @@ class UserControllerTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('users', [
-            'name' => 'Alfred',
-            'email' => 'alfred@example.com',
+            'name' => 'Alef',
+            'email' => 'alef@gmail.com',
             'tipo_user_id' => $tipo->id
         ]);
     }
