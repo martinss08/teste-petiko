@@ -1,5 +1,4 @@
 build:
-	docker network create laravel
 	docker compose up -d
 	docker compose exec app composer install
 	docker compose run node npm install	
