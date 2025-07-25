@@ -18,6 +18,9 @@ cd teste-petiko
 ```bash
 make build 
 ```
+## 3. Acesse o projeto
+
+Para acessar o projeto, acesse [http://localhost:8000](http://localhost:8000)
 
 ## 👤 Usuário padrão (seeded)
 

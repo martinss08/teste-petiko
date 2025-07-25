@@ -24,7 +24,11 @@
       Lista de Tarefas
     </h1>
 
-    <button @click="exportarCSV" class="btn btn-success" style="margin-bottom: 1rem;">
+    <a href="/tarefa/create"class="btn btn-primary mr-5" style="margin-bottom: 1rem;">
+      Nova Tarefa
+    </a>
+
+    <button @click="exportarCSV" type="button" class="btn btn-outline-success" style="margin-bottom: 1rem;">
       Exportar CSV
     </button>
 

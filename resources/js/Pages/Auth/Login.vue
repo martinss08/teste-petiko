@@ -23,7 +23,7 @@
             <div class="mx-auto my-2 py-2 px-3 w-75">
                 <button type="submit" class="btn btn-primary" style="margin-top: 2rem;
                 width: 100%;">
-                    Cadastrar
+                    Login
                 </button>
             </div>
         </form>
