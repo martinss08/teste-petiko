@@ -57,6 +57,15 @@ services:
     networks:
       - laravel
 
+  node:
+    image: node:20
+    container_name: node_app
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    networks:
+      - laravel 
+
 networks:
   laravel:
 

@@ -35,7 +35,7 @@ Após rodar os seeders, você poderá acessar com:
 | Subir containers              | `make up`                                                |
 | Parar containers              | `make down`                                              |
 | Rodar os testes               | `make test`                                              | 
-
+        
 ---
 
 ## 💡 Estrutura
