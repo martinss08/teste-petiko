@@ -1,4 +1,4 @@
-# 📝 Projeto Laravel + Vue.js – Gerenciador de Tarefas
+# 📝 To-do List Laravet + Vue.js
 
 Este projeto é uma aplicação de gerenciamento de tarefas desenvolvida com Laravel (backend) e Vue.js (frontend via Inertia.js), com ambiente configurado via Docker.
 
@@ -9,40 +9,15 @@ Este projeto é uma aplicação de gerenciamento de tarefas desenvolvida com Lar
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/martinss08/teste-petiko.git
+cd teste-petiko
 ```
 
-### 2. Suba os containers com Docker Compose
+### 2. Instale as dependências do Laravel
 
 ```bash
-docker compose up -d
+make build 
 ```
-
-> Isso irá subir os serviços: PHP, MySQL, Nginx e phpMyAdmin (caso esteja configurado).
-
----
-
-### 3. Instale as dependências do Laravel
-
-```bash
-docker compose exec app composer install
-```
-
-### 4. Instale as dependências do front-end (Vue.js + Bootstrap)
-
-```bash
-docker compose exec app npm install
-```
-
-### 5. Gere a key da aplicação e rode as migrations + seeders
-
-```bash
-docker compose exec app php artisan key:generate
-docker compose exec app php artisan migrate --seed
-```
-
----
 
 ## 👤 Usuário padrão (seeded)
 
@@ -55,15 +30,11 @@ Após rodar os seeders, você poderá acessar com:
 
 ## 🐞 Comandos úteis
 
-| Ação                          | Comando                                                 |
-|------------------------------|----------------------------------------------------------|
-| Subir containers             | `docker compose up -d`                                   |
-| Compilar assets frontend     | `npm run dev`                                            |
-| Parar containers             | `docker compose down`                                    |
-| Rodar os testes                                                                         | 
-|    `docker compose exec app php artisan test --filter=UserControllerTest`               |
-|    `docker compose exec app php artisan test --filter=TarefaControllerTest`             |
-
+| Ação                          | Comando                                                  |
+|-------------------------------|----------------------------------------------------------|
+| Subir containers              | `make up`                                                |
+| Parar containers              | `make down`                                              |
+| Rodar os testes               | `make test`                                              | 
 
 ---
 
