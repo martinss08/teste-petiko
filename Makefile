@@ -1,5 +1,6 @@
 build:
 	docker compose up -d
+	docker compose exec app chmod -R 777 storage bootstrap/cache
 	docker compose exec app composer install
 	docker compose run node npm install	
 	docker compose run node npm run build	
