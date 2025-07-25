@@ -78,6 +78,8 @@
 import Header from '@/Components/Header.vue'
 import { router } from '@inertiajs/vue3'
 import { ref, watch } from 'vue'
+import Swal from 'sweetalert2'
+
 
 const props = defineProps({
   busca: String,
@@ -111,9 +113,24 @@ function editar(id) {
 }
 
 function deletar(id) {
-    if (confirm('Tem certeza que deseja excluir este usuário?')) {
-        router.delete(`/user/${id}`)
+  Swal.fire({
+    title: 'Tem certeza?',
+    text: 'Esta ação não poderá ser desfeita!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sim, deletar!',
+    cancelButtonText: 'Cancelar',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      router.delete(`/user/${id}`, {
+        onSuccess: () => {
+          Swal.fire('Deletado!', 'O usuario foi deletado com sucesso.', 'success')
+        },
+      })
     }
+  })
 }
 </script>
 

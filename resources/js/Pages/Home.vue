@@ -105,6 +105,7 @@
 import Header from '@/Components/Header.vue'
 import { router } from '@inertiajs/vue3'
 import { ref, watch } from 'vue'
+import Swal from 'sweetalert2'
 
 const props = defineProps({
   tarefas: Array,
@@ -144,9 +145,24 @@ const editar = (id) => {
 }
 
 function deletar(id) {
-  if (confirm('Tem certeza que deseja deletar?')) {
-    router.delete(`/tarefa/${id}`)
-  }
+  Swal.fire({
+    title: 'Tem certeza?',
+    text: 'Esta ação não poderá ser desfeita!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sim, deletar!',
+    cancelButtonText: 'Cancelar',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      router.delete(`/tarefa/${id}`, {
+        onSuccess: () => {
+          Swal.fire('Deletado!', 'A tarefa foi deletada com sucesso.', 'success')
+        },
+      })
+    }
+  })
 }
 
 function mudarPagina(url) {
