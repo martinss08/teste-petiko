@@ -22,16 +22,19 @@ class TarefaRequest extends FormRequest
      */
     public function rules(): array
     {
+        $tarefa = $this->route('tarefa');
+        $tarefaId = is_object($tarefa) ? $tarefa->id : $tarefa;
+
         return [
             'titulo' => ['required', 'min:3', 'max:255',
                 Rule::unique('tarefas')->where(function ($query) {
-                    return $query->where('user_id', $this->input('user_id'));
-                })
+                    return $query->where('user_id', auth()->id());
+                })->ignore($tarefaId)
             ],
             'descricao' => ['nullable', 'max:230'],
             'status_id' => ['required', 'exists:status,id'],
             'data_tarefa' => ['required', 'date', 'after_or_equal:today'],
-            'user_id' => ['required', 'exists:users,id'],
+            'user_id' => ['required', 'exists:users,id']
         ];
     }
     
