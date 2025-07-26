@@ -75,7 +75,7 @@ class TarefaControllerTest extends TestCase
             'data_tarefa' => now()->toDateString()
         ]);
 
-        $response = $this->actingAs($user)->put(route('tarefa.update', $tarefa->id), [
+        $this->actingAs($user)->put(route('tarefa.update', $tarefa->id), [
             'titulo' => 'Atualizado',
             'descricao' => $tarefa->descricao,
             'status_id' => $tarefa->status_id,
