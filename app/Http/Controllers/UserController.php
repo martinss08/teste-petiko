@@ -5,35 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Http\Requests\UserRequest;
+use App\Repository\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    protected $model;
+    protected $userRepository;
 
-    public function __construct(User $model)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
-        $this->model = $model;
+        $this->userRepository = $userRepository;
     }
 
     public function index(Request $request)
     {
         $busca = $request->input('busca');
 
-        $query = $this->model->with('tipoUsuario');
-
-        if ($busca) {
-            $query->where(function ($q) use ($busca) {
-                $q->where('name', 'like', "%{$busca}%")
-                ->orWhereHas('tipoUsuario', function ($q2) use ($busca) {
-                    $q2->where('nome', 'like', "%{$busca}%");
-                });
-            });
-        }
-
-        $users = $query->orderBy('id')->paginate(10)->withQueryString();
+        $users = $this->userRepository->searchBar($busca);
 
         return Inertia::render('ListUser', [
             'users' => $users,
@@ -52,18 +42,16 @@ class UserController extends Controller
     {
         $dados = $request->validated();
                 
-        $this->model->create($dados);
+        $this->userRepository->store($dados);
 
-        if (Auth::check()) {
-           return redirect()->route('user.index');
-        }
-
-        return Inertia::render('Auth/Login');
+        return Auth::check() 
+            ? redirect()->route('user.index')
+            : Inertia::render('Auth/Login');
     }
 
     public function show($id)
     {
-        $user = $this->model->findOrFail($id);
+        $user = $this->userRepository->find($id);
 
         return Inertia::render('Auth/Register', [
             'user' => $user,
@@ -73,7 +61,7 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = $this->model->findOrFail($id);
+        $user = $this->userRepository->find($id);
 
         return Inertia::render('Auth/Register', [
             'user' => $user,
@@ -83,18 +71,15 @@ class UserController extends Controller
 
     public function update($id, UserRequest $request)
     {
-        $user = $this->model->findOrFail($id);
-        
         $dados = $request->validated();
         
         if ($request->filled('password')) {
             $dados['password'] = Hash::make($request->password);
         } else {
-            
             unset($dados['password']);
         }
 
-        $user->update($dados);
+        $this->userRepository->update($id, $dados);
 
         if (Auth::user()->tipo_user_id === 2) {
             return redirect()->route('user.index');
@@ -104,22 +89,8 @@ class UserController extends Controller
     }
 
     public function destroy($id)
-    {
-        $user = $this->model->findOrFail($id);
-        $authUser = auth()->user();
-
-        if ($user->id === $authUser->id && $user->tipo_user_id == 2) {
-            $otherAdminsCount = $this->model
-                ->where('tipo_user_id', 2)
-                ->where('id', '!=', $user->id)
-                ->count();
-
-            if ($otherAdminsCount === 0) {
-                return redirect()->route('user.index')->with('error', 'Você não pode se deletar, pois é o último administrador.');
-            }
-        }
-
-        $user->delete();
+    {   
+        $this->userRepository->delete($id);
 
         return redirect()->route('user.index');
     }

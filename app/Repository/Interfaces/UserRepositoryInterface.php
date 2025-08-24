@@ -6,7 +6,11 @@ use App\Repository\Interfaces\EloquentRepositoryInterface;
 
 interface UserRepositoryInterface extends EloquentRepositoryInterface
 {
-    public function getAll();
-    // public function store();
+    public function all();
+    public function searchBar(string $busca);
+    public function store(array $dados);
+    public function find(int $id);
+    public function update(int $id, array $data);
+    public function delete(int $id);
 
 }
