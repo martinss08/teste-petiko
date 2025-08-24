@@ -8,40 +8,23 @@ use App\Models\Status;
 use App\Models\Tarefa;
 use Illuminate\Http\Request;
 use App\Http\Requests\TarefaRequest;
+use App\Repository\Eloquent\TarefaRepository;
 use Illuminate\Support\Facades\Response;
 
 class TarefaController extends Controller
 {
-    protected $model;
+    protected $tarefaRepository;
 
-    public function __construct(Tarefa $model)
+    public function __construct(TarefaRepository $tarefaRepository)
     {
-        $this->model = $model;
+        $this->tarefaRepository = $tarefaRepository;
     }
 
     public function index(Request $request)
     {
         $busca = $request->input('busca');
 
-        $query = $this->model->with(['status', 'user']);
-
-        if (auth()->user()->tipo_user_id !== 2) {
-            $query->where('user_id', auth()->id());
-        }
-
-        if ($busca) {
-            $query->where(function ($q) use ($busca) {
-                $q->where('titulo', 'like', "%{$busca}%")
-                ->orWhereHas('status', function ($q2) use ($busca) {
-                    $q2->where('nome', 'like', "%{$busca}%");
-                });
-            });
-        }
-
-        $tarefas = $query->orderBy('id')
-            ->paginate(10)
-            ->withQueryString();
-
+        $tarefas = $this->tarefaRepository->searchBar($busca);
 
         return Inertia::render('Home', [
             'tarefas' => $tarefas,
