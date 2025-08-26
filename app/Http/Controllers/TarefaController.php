@@ -26,6 +26,7 @@ class TarefaController extends Controller
 
         $tarefas = $this->tarefaRepository->searchBar($busca);
 
+
         return Inertia::render('Home', [
             'tarefas' => $tarefas,
             'busca' => $busca,
@@ -60,7 +61,7 @@ class TarefaController extends Controller
 
     public function edit($id)
     {
-        $tarefa = $this->model->with('status')->findOrFail($id);
+        $tarefa = $this->tarefaRepository->findWithStatus($id);
         
         $status = Status::select('id', 'nome')->get();
 
@@ -72,11 +73,9 @@ class TarefaController extends Controller
     }
     public function update($id, TarefaRequest $request)
     {
-        $tarefa = $this->model->findOrFail($id);
-
         $dados = $request->validated();
 
-        $tarefa->update($dados);
+        $this->tarefaRepository->update($id, $dados);
     
         return redirect()->route('tarefa.index');
     }
@@ -84,7 +83,7 @@ class TarefaController extends Controller
         
     public function toggleStatus($id)
     {
-        $tarefa = Tarefa::findOrFail($id);
+        $tarefa = $this->tarefaRepository->find($id);
 
         $tarefa->status_id = $tarefa->status_id === 2 ? 1 : 2;
         $tarefa->save();
@@ -133,9 +132,7 @@ class TarefaController extends Controller
 
     public function destroy($id)
     {
-        $tarefa = $this->model->findOrFail($id);
-
-        $tarefa->delete();
+        $this->tarefaRepository->delete($id);
 
         return redirect()->route('tarefa.index');
     }

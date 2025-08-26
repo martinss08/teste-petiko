@@ -36,4 +36,33 @@ class TarefaRepository extends BaseRepository implements TarefaRepositoryInterfa
 
         return $tarefas;
     }
+
+    public function find($id)
+    {
+        return $this->model->findOrFail($id);
+    }
+
+    public function findWithStatus($id)
+    {
+        return $this->model->with('status')->findOrFail($id);
+    }
+
+    public function update(int $id, array $data)
+    {
+        $tareafa = $this->model->findOrFail($id);
+
+        $tareafa->update($data);
+
+        return $tareafa;
+    }
+
+    public function delete($id)
+    {
+        $tareafa = $this->model->findOrFail($id);
+
+        $tareafa->delete();
+
+        return $tareafa;
+
+    }
 }

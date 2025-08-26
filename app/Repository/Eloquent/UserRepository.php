@@ -24,7 +24,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         if ($busca) {
             $query->where(function ($q) use ($busca) {
                 $q->where('name', 'like', "%{$busca}%")
-                ->orWhereHas('tipoUsuario', function ($q2) use ($busca) {
+                ->orWhereHas('status', function ($q2) use ($busca) {
                     $q2->where('nome', 'like', "%{$busca}%");
                 });
             });
