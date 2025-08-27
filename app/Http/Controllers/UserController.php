@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Inertia\Inertia;
 use App\Http\Requests\UserRequest;
 use App\Repository\Interfaces\UserRepositoryInterface;

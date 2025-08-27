@@ -15,7 +15,7 @@ class TarefaRepository extends BaseRepository implements TarefaRepositoryInterfa
 
     public function searchBar($busca)
     {
-        $query = $this->model->query();
+        $query = $this->model->with(['user', 'status']);
             
         if(auth()->user()->tipo_user_id !== 2) {
             $query->where('user_id', auth()->id());
@@ -37,6 +37,15 @@ class TarefaRepository extends BaseRepository implements TarefaRepositoryInterfa
         return $tarefas;
     }
 
+    public function create($data)
+    {
+        if (auth()->user()->tipo_user_id != 2) {
+            $data['user_id'] = auth()->id();
+        }
+
+        return $this->model->create($data);
+    }
+
     public function find($id)
     {
         return $this->model->findOrFail($id);
@@ -51,18 +60,48 @@ class TarefaRepository extends BaseRepository implements TarefaRepositoryInterfa
     {
         $tareafa = $this->model->findOrFail($id);
 
-        $tareafa->update($data);
-
-        return $tareafa;
+        return $tareafa->update($data);
     }
+
+    public function exportarCSV()
+    {
+        // Carrega todas as tarefas com status e usuário
+        $tarefas = $this->model->with(['status', 'user'])->get();
+
+        // Cabeçalho do CSV
+        $csvHeader = [
+            'ID',
+            'Título',
+            'Descrição',
+            'Data',
+            'Status',
+            'Responsável'
+        ];
+
+        // Monta os dados do CSV
+        $csvData = $tarefas->map(function ($tarefa) {
+            return [
+                $tarefa->id,
+                $tarefa->titulo,
+                $tarefa->descricao,
+                $tarefa->data_tarefa,
+                $tarefa->status->nome ?? 'sem status',
+                $tarefa->user->name ?? 'sem responsável',
+            ];
+        });
+
+        return [
+            'header' => $csvHeader,
+            'data' => $csvData,
+            'filename' => 'tarefas_' . now()->format('Ymd_His') . '.csv'
+        ];
+    }
+
 
     public function delete($id)
     {
         $tareafa = $this->model->findOrFail($id);
 
-        $tareafa->delete();
-
-        return $tareafa;
-
+        return $tareafa->delete();
     }
 }

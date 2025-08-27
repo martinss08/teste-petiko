@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-use App\Repository\Eloquent\BaseRepository;
 use App\Repository\Eloquent\TarefaRepository;
 use App\Repository\Eloquent\UserRepository;
-use App\Repository\Interfaces\EloquentRepositoryInterface;
+use App\Repository\Eloquent\StatusRepository;
+
+use App\Repository\Interfaces\StatusRepositoryInterface;
 use App\Repository\Interfaces\TarefaRepositoryInterface;
 use App\Repository\Interfaces\UserRepositoryInterface;
 use Illuminate\Support\Facades\Vite;
@@ -18,7 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // $this->app->bind(EloquentRepositoryInterface::class, BaseRepository::class);
         $this->app->bind(
             UserRepositoryInterface::class,
             UserRepository::class
@@ -27,6 +27,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             TarefaRepositoryInterface::class,
             TarefaRepository::class
+        );
+
+        $this->app->bind(
+            StatusRepositoryInterface::class,
+            StatusRepository::class
         );
     }
 

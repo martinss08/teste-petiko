@@ -5,8 +5,6 @@ namespace App\Repository\Eloquent;
 use App\Models\User;
 use App\Repository\Eloquent\BaseRepository;
 use App\Repository\Interfaces\UserRepositoryInterface;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class UserRepository extends BaseRepository implements UserRepositoryInterface
 {
@@ -35,6 +33,11 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
                      ->withQueryString();
     }
 
+    public function getForSelect()
+    {
+        return $this->model->select('id', 'name')->get();
+    }
+
     public function store($data)
     {
         return $this->model->create($data);
@@ -49,9 +52,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         $user = $this->model->findOrFail($id);
     
-        $user->update($data);
-
-        return $user;
+        return $user->update($data);
     }
 
     public function delete($id)
@@ -71,9 +72,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             }
         }
 
-        $user->delete();
-
-        return $user;
+        return $user->delete();
     }
     
 }

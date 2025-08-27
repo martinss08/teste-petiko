@@ -2,22 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Inertia\Inertia;
-use App\Models\Status;
-use App\Models\Tarefa;
 use Illuminate\Http\Request;
 use App\Http\Requests\TarefaRequest;
 use App\Repository\Eloquent\TarefaRepository;
+use App\Repository\Eloquent\StatusRepository;
+use App\Repository\Eloquent\UserRepository;
 use Illuminate\Support\Facades\Response;
 
 class TarefaController extends Controller
 {
     protected $tarefaRepository;
+    protected $statusRepository;
+    protected $userRepository;
 
-    public function __construct(TarefaRepository $tarefaRepository)
+    public function __construct (
+        TarefaRepository $tarefaRepository,
+        StatusRepository $statusRepository,
+        UserRepository $userRepository
+    )
     {
         $this->tarefaRepository = $tarefaRepository;
+        $this->statusRepository = $statusRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function index(Request $request)
@@ -25,7 +32,6 @@ class TarefaController extends Controller
         $busca = $request->input('busca');
 
         $tarefas = $this->tarefaRepository->searchBar($busca);
-
 
         return Inertia::render('Home', [
             'tarefas' => $tarefas,
@@ -36,8 +42,8 @@ class TarefaController extends Controller
 
     public function create()
     {
-        $status = Status::select('id', 'nome')->get();
-        $usuarios = User::select('id', 'name')->get();
+        $status = $this->statusRepository->getForSelect();
+        $usuarios = $this->userRepository->getForSelect();
 
         return Inertia::render('FormTarefa', [
             'status' => $status,
@@ -49,12 +55,8 @@ class TarefaController extends Controller
     public function store(TarefaRequest $request)
     {
         $data = $request->validated();
-
-        if (auth()->user()->tipo_user_id != 2) {
-            $data['user_id'] = auth()->id();
-        }
         
-        $this->model->create($data);
+        $this->tarefaRepository->create($data);
 
         return redirect()->route('tarefa.index');
     }
@@ -63,14 +65,14 @@ class TarefaController extends Controller
     {
         $tarefa = $this->tarefaRepository->findWithStatus($id);
         
-        $status = Status::select('id', 'nome')->get();
+        $status = $this->statusRepository->getForSelect();
 
         return Inertia::render('FormTarefa', [
             'tarefa' => $tarefa,
             'status' => $status,
-            
         ]);
     }
+
     public function update($id, TarefaRequest $request)
     {
         $dados = $request->validated();
@@ -91,31 +93,14 @@ class TarefaController extends Controller
         return back(); 
     }
 
-    public function exportarCSV()
+   public function exportarCSV()
     {
-        $tarefas = $this->model->with(['status', 'user'])->get();
-
-        $csvHeader = [
-            'ID', 'Título', 'Descrição', 'Data', 'Status', 'Responsável'
-        ];
-
-        $csvData = $tarefas->map(function ($tarefa) {
-            return [
-                $tarefa->id,
-                $tarefa->titulo,
-                $tarefa->descricao,
-                $tarefa->data_tarefa,
-                $tarefa->status->nome ?? 'sem status',
-                $tarefa->user->name ?? 'sem responsável',
-            ];
-        });
-
-        $filename = 'tarefas_' . now()->format('Ymd_His') . '.csv';
+        $csv = $this->tarefaRepository->exportarCSV();
 
         $handle = fopen('php://temp', 'r+');
-        fputcsv($handle, $csvHeader);
+        fputcsv($handle, $csv['header']);
 
-        foreach ($csvData as $row) {
+        foreach ($csv['data'] as $row) {
             fputcsv($handle, $row);
         }
 
@@ -125,7 +110,7 @@ class TarefaController extends Controller
 
         return Response::make($contents, 200, [
             'Content-Type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename=\"$filename\"",
+            'Content-Disposition' => "attachment; filename=\"{$csv['filename']}\"",
         ]);
     }
 

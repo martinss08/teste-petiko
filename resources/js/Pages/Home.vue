@@ -48,6 +48,7 @@
         </thead>
         
         <tbody>
+          
           <tr v-for="tarefa in tarefas.data" :key="tarefa.id">
             <td v-if="authUser && authUser.tipo_user_id === 2" >{{ tarefa.id }}</td>
             <td>{{ tarefa.titulo }}</td>
@@ -74,8 +75,9 @@
               </span>
             </td>
             
-            <td v-if="authUser && authUser.tipo_user_id === 2">{{ tarefa.user?.name }}</td>
-
+            <td v-if="authUser && authUser.tipo_user_id === 2">
+              {{ tarefa.user?.name }}
+            </td>
             <td>
               <div class="d-flex justify-content-center align-items-center gap-3">
                 <button class="btn btn-link p-0 text-primary fs-5" 
