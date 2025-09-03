@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Http\Requests\UserRequest;
 use App\Repository\Interfaces\UserRepositoryInterface;
+use App\Service\UserService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -12,17 +13,20 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     protected $userRepository;
+    protected $userService;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository, 
+                                UserService             $userService)
     {
-        $this->userRepository = $userRepository;
+        $this->userRepository = $userRepository; 
+        $this->userService = $userService; 
     }
 
     public function index(Request $request)
     {
         $busca = $request->input('busca');
 
-        $users = $this->userRepository->searchBar($busca);
+        $users = $this->userService->getAllUser($busca);
 
         return Inertia::render('ListUser', [
             'users' => $users,
@@ -39,9 +43,7 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
-        $dados = $request->validated();
-                
-        $this->userRepository->store($dados);
+        $this->userService->createUser($request);
 
         return Auth::check() 
             ? redirect()->route('user.index')
@@ -70,15 +72,7 @@ class UserController extends Controller
 
     public function update($id, UserRequest $request)
     {
-        $dados = $request->validated();
-        
-        if ($request->filled('password')) {
-            $dados['password'] = Hash::make($request->password);
-        } else {
-            unset($dados['password']);
-        }
-
-        $this->userRepository->update($id, $dados);
+        $this->userService->updateUser($id, $request);
 
         if (Auth::user()->tipo_user_id === 2) {
             return redirect()->route('user.index');
@@ -89,7 +83,7 @@ class UserController extends Controller
 
     public function destroy($id)
     {   
-        $this->userRepository->delete($id);
+        $this->userService->delete($id);
 
         return redirect()->route('user.index');
     }

@@ -8,6 +8,7 @@ use App\Http\Requests\TarefaRequest;
 use App\Repository\Eloquent\TarefaRepository;
 use App\Repository\Eloquent\StatusRepository;
 use App\Repository\Eloquent\UserRepository;
+use App\Service\TarefaService;
 use Illuminate\Support\Facades\Response;
 
 class TarefaController extends Controller
@@ -15,23 +16,26 @@ class TarefaController extends Controller
     protected $tarefaRepository;
     protected $statusRepository;
     protected $userRepository;
+    protected $tarefaService;
 
     public function __construct (
         TarefaRepository $tarefaRepository,
         StatusRepository $statusRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        TarefaService $tarefaService
     )
     {
         $this->tarefaRepository = $tarefaRepository;
         $this->statusRepository = $statusRepository;
         $this->userRepository = $userRepository;
+        $this->tarefaService = $tarefaService;
     }
 
     public function index(Request $request)
     {
         $busca = $request->input('busca');
 
-        $tarefas = $this->tarefaRepository->searchBar($busca);
+        $tarefas = $this->tarefaService->getAllTarefa($busca);
 
         return Inertia::render('Home', [
             'tarefas' => $tarefas,
@@ -54,9 +58,7 @@ class TarefaController extends Controller
 
     public function store(TarefaRequest $request)
     {
-        $data = $request->validated();
-        
-        $this->tarefaRepository->create($data);
+        $this->tarefaService->createTarefa($request);
 
         return redirect()->route('tarefa.index');
     }
@@ -64,7 +66,6 @@ class TarefaController extends Controller
     public function edit($id)
     {
         $tarefa = $this->tarefaRepository->findWithStatus($id);
-        
         $status = $this->statusRepository->getForSelect();
 
         return Inertia::render('FormTarefa', [
@@ -75,9 +76,7 @@ class TarefaController extends Controller
 
     public function update($id, TarefaRequest $request)
     {
-        $dados = $request->validated();
-
-        $this->tarefaRepository->update($id, $dados);
+        $this->tarefaService->updateTarefa($id, $request);
     
         return redirect()->route('tarefa.index');
     }

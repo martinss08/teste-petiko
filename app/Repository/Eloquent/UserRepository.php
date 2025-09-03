@@ -22,15 +22,13 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         if ($busca) {
             $query->where(function ($q) use ($busca) {
                 $q->where('name', 'like', "%{$busca}%")
-                ->orWhereHas('status', function ($q2) use ($busca) {
+                ->orWhereHas('tipoUsuario', function ($q2) use ($busca) {
                     $q2->where('nome', 'like', "%{$busca}%");
                 });
             });
         }
 
-        return $query->orderBy('id')
-                     ->paginate(10)
-                     ->withQueryString();
+        return $query;
     }
 
     public function getForSelect()
@@ -56,21 +54,8 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     public function delete($id)
-    {
+    {   
         $user = $this->model->findOrFail($id);
-
-        $authUser = auth()->user();
-
-        if ($user->id === $authUser->id && $user->tipo_user_id == 2) {
-            $otherAdminsCount = $this->model
-                ->where('tipo_user_id', 2)
-                ->where('id', '!=', $user->id)
-                ->count();
-
-            if ($otherAdminsCount === 0) {
-                return redirect()->route('user.index')->with('error', 'Você não pode se deletar, pois é o último administrador.');
-            }
-        }
 
         return $user->delete();
     }

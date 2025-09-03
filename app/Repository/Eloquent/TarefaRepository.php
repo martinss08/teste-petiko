@@ -13,36 +13,15 @@ class TarefaRepository extends BaseRepository implements TarefaRepositoryInterfa
         $this->model = $model;
     }
 
-    public function searchBar($busca)
+    public function searchBar($query)
     {
-        $query = $this->model->with(['user', 'status']);
-            
-        if(auth()->user()->tipo_user_id !== 2) {
-            $query->where('user_id', auth()->id());
-        }
-
-        if ($busca) {
-            $query->where(function ($q) use ($busca) {
-                $q->where('name', 'like', "%{$busca}%")
-                ->orWhereHas('tipoUsuario', function ($q2) use ($busca) {
-                    $q2->where('nome', 'like', "%{$busca}%");
-                });
-            });
-        }
-
-        $tarefas = $query->orderBy('id')
+        return $query->orderBy('id')
             ->paginate(10)
             ->withQueryString();
-
-        return $tarefas;
     }
 
     public function create($data)
     {
-        if (auth()->user()->tipo_user_id != 2) {
-            $data['user_id'] = auth()->id();
-        }
-
         return $this->model->create($data);
     }
 
@@ -54,6 +33,11 @@ class TarefaRepository extends BaseRepository implements TarefaRepositoryInterfa
     public function findWithStatus($id)
     {
         return $this->model->with('status')->findOrFail($id);
+    }
+
+    public function withUserAndStatus()
+    {
+        return $this->model->with(['user', 'status']);
     }
 
     public function update(int $id, array $data)
